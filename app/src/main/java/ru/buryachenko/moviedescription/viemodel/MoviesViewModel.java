@@ -21,16 +21,25 @@ import ru.buryachenko.moviedescription.utilities.ConvertibleTerms;
 import ru.buryachenko.moviedescription.utilities.Metaphone;
 import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
+import static ru.buryachenko.moviedescription.Constant.IS_PERFECT_FILTER_ONLY;
+
 public class MoviesViewModel extends ViewModel {
 
     private String textFilter = "";
     private boolean onlyTitle = false;
+
+    private int indexForOpen = -1;
 
     private SparseArray<MovieRecord> movies = new SparseArray();
     private MutableLiveData<Boolean> listReady = new MutableLiveData<>();
 
     private final int EMPTY_USEFULNESS = 9999;
 
+    private MovieRecord[] moviesOnScreen;
+
+    private boolean isEmptyUsefulness(int movieId) {
+        return movies.get(movieId) == null || movies.get(movieId).getUsefulness() == EMPTY_USEFULNESS;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void init() {
@@ -44,6 +53,7 @@ public class MoviesViewModel extends ViewModel {
                         public void onSubscribe(Disposable d) {
                             setListReady(false);
                             movies.clear();
+                            moviesOnScreen = null;
                             AppLog.write("Begin reforming");
                         }
 
@@ -68,12 +78,36 @@ public class MoviesViewModel extends ViewModel {
     }
 
     public MovieRecord[] getListMovies() {
-        MovieRecord[] res = new MovieRecord[movies.size()];
+        if (moviesOnScreen == null)
+            fillMoviesOnScreen();
+        return moviesOnScreen;
+    }
+
+    private void fillMoviesOnScreen() {
+        int count = 0;
+        if (!IS_PERFECT_FILTER_ONLY
+            || getTextFilter().isEmpty()) {
+            count = movies.size();
+        } else {
+            for (int index = 0; index < movies.size(); index++) {
+                if (!isEmptyUsefulness(movies.get(movies.keyAt(index)).getId())) {
+                    count = count + 1;
+                }
+            }
+        }
+        MovieRecord[] res = new MovieRecord[count];
+        int currentIndex = 0;
         for (int index = 0; index < movies.size(); index++) {
-            res[index] = movies.get(movies.keyAt(index));
+            if (!IS_PERFECT_FILTER_ONLY
+                    || !isEmptyUsefulness(movies.get(movies.keyAt(index)).getId())
+                    || getTextFilter().isEmpty()
+            )
+            {
+                res[currentIndex++] = movies.get(movies.keyAt(index));
+            }
         }
         Arrays.sort(res, (a, b) -> a.getCompareFlag().compareTo(b.getCompareFlag()));
-        return res;
+        moviesOnScreen = res;
     }
 
     private void clearUsefulness() {
@@ -87,6 +121,7 @@ public class MoviesViewModel extends ViewModel {
         this.onlyTitle = onlyTitle;
         clearUsefulness();
         List<String> wordsList = SonicUtils.getWordsList(textFilter);
+        moviesOnScreen = null;
         if (wordsList.isEmpty()) {
             setListReady(true);
             return;
@@ -95,11 +130,11 @@ public class MoviesViewModel extends ViewModel {
         Observable.fromIterable(wordsList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
+//                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
                 .map(Metaphone::metaphone)
-                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
+//                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
                 .map(ConvertibleTerms::topWord)
-                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
+//                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
                 .map(code -> App.getInstance().movieDatabase.tagDao().getSyncMovieIdsByTags(code, onlyTitle))
                 .subscribe(new Observer<List<Integer>>() {
                     @Override
@@ -151,5 +186,13 @@ public class MoviesViewModel extends ViewModel {
         if (listReady.getValue() == null || listReady.getValue() != newValue) {
             listReady.postValue(newValue);
         }
+    }
+
+    public int getIndexForOpen() {
+        return indexForOpen;
+    }
+
+    public void setIndexForOpen(int indexForOpen) {
+        this.indexForOpen = indexForOpen;
     }
 }

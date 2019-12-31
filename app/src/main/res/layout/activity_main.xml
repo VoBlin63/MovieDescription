@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+<!--
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -26,5 +33,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
-
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>

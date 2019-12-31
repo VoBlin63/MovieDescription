@@ -2,5 +2,10 @@
 <resources>
     <color name="colorPrimary">#009A00</color>
     <color name="colorPrimaryDark">#007800</color>
-    <color name="colorAccent">#9a009a</color>
+    <color name="colorAccent">#F2EFF3</color>
+    <color name="colorSeparator">#534807</color>
+    <color name="colorBackgroundField">#0A200A</color>
+    <color name="colorText">#FDE64A</color>
+    <color name="colorUnchecked">#1B991F</color>
+
 </resources>

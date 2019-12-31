@@ -92,7 +92,7 @@ public class App extends Application {
 //        }
 //    }
 
-    private void setUpUpdateDatabase() {
+    public void setUpUpdateDatabase() {
         WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);
         OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UpdateDatabase.class)
                 .addTag(UPDATE_DATABASE_WORK_TAG)
