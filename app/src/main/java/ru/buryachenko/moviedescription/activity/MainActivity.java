@@ -1,15 +1,22 @@
 package ru.buryachenko.moviedescription.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.EditText;
+
+import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
@@ -32,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         MoviesViewModel viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         viewModel.init();
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(item -> clickDrawerMenu(item.getItemId()));
+
         callFragment(FRAGMENT_MAIN_LIST);
         //callFragment(FRAGMENT_CONFIG);
 
@@ -53,6 +63,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private boolean clickDrawerMenu(int idMenuItem) {
+        switch (idMenuItem) {
+            case R.id.menuAboutApp:
+                break;
+            case R.id.menuFaq:
+                break;
+            case R.id.menuLikedList:
+                break;
+            case R.id.menuQuit:
+                tryToQuit();
+                break;
+            case R.id.menuConfig:
+                callFragment(FRAGMENT_CONFIG);
+                break;
+        }
+        DrawerLayout drawer = findViewById(R.id.drawer);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public static void callFragment(String screenTag) {
         Fragment toCall = fragmentManager.findFragmentByTag(screenTag);
         if (toCall != null) {
@@ -70,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             case FRAGMENT_MAIN_LIST:
                 toCall = new MainListFragment();
                 break;
-            case  FRAGMENT_DETAIL:
+            case FRAGMENT_DETAIL:
                 toCall = new DetailFragment();
                 break;
             default:
@@ -86,4 +126,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void tryToQuit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogInterface.OnClickListener listener =
+                (dialog, which) -> {
+                    if (which == Dialog.BUTTON_POSITIVE) {
+                        System.exit(0);
+                    }
+                    dialog.dismiss();
+                };
+        builder.setMessage(getResources().getString(R.string.mainActivityAskToExit));
+        builder.setNegativeButton(getResources().getString(R.string.mainActivityAskToExitYes), listener);
+        builder.setPositiveButton(getResources().getString(R.string.mainActivityAskToExitCancel), listener);
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
 }

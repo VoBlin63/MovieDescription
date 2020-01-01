@@ -11,4 +11,12 @@
     <string name="config_refreshMode">Обновление списка фильмов</string>
     <string name="config_refreshModeWiFi">только при соединении WiFi</string>
     <string name="config_refreshModeAll">при любом соединении</string>
+    <string name="menu_aboutApp">О программе</string>
+    <string name="menu_Faq">FAQ</string>
+    <string name="menu_likedList">Избранные фильмы</string>
+    <string name="menu_config">Настройки</string>
+    <string name="menu_quit">Выход</string>
+    <string name="mainActivityAskToExit">Вы хотите выйти?</string>
+    <string name="mainActivityAskToExitYes">Нет, остаться</string>
+    <string name="mainActivityAskToExitCancel">Да, выйти</string>
 </resources>

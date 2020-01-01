@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+        android:id="@+id/menuAboutApp"
+        android:icon="@drawable/ic_menu_about"
+        android:title="@string/menu_aboutApp" />
+    <item
+        android:id="@+id/menuFaq"
+        android:icon="@drawable/ic_menu_faq"
+        android:title="@string/menu_Faq" />
+    <item
+        android:id="@+id/menuLikedList"
+        android:icon="@drawable/ic_liked"
+        android:title="@string/menu_likedList" />
+    <item
+        android:id="@+id/menuConfig"
+        android:icon="@drawable/ic_menu_config"
+        android:title="@string/menu_config" />
+    <item
+        android:id="@+id/menuQuit"
+        android:icon="@drawable/ic_menu_quit"
+        android:title="@string/menu_quit" />
+</menu>
