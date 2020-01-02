@@ -29,6 +29,25 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_element_height">
+
+        <TextView
+            style="@style/ListConfig"
+            android:text="@string/config_useOverview"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <CheckBox
+            android:id="@+id/configUseOverview"
+            style="@style/ListConfig"
+            android:theme="@style/ListConfig"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

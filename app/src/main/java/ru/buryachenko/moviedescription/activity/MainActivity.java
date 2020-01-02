@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager fragmentManager;
     private MoviesViewModel viewModel;
+    private Config config = Config.getInstance();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -70,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                AppLog.write("onQueryTextChange to " + newText);
-                viewModel.setFilter(newText, true);
+                viewModel.setFilter(newText, !config.isUseOverview());
                 return true;
             }
         });

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -14,9 +15,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.Config;
 
 public class ConfigFragment extends Fragment {
     private View layout;
+    private Config config = Config.getInstance();
+
+    private CheckBox isPerfectFilterOnly;
+    private CheckBox isUseOverview;
+    private SeekBar sleepSecondsBetweenLoadPages;
+    private RadioButton wifi;
+    private RadioButton all;
 
     @Nullable
     @Override
@@ -29,7 +38,13 @@ public class ConfigFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         layout = view;
 
-        SeekBar sleepSecondsBetweenLoadPages = layout.findViewById(R.id.configSleepSecondsBetweenLoadPages);
+        isPerfectFilterOnly = layout.findViewById(R.id.configIsPerfectFilterOnly);
+        isPerfectFilterOnly.setChecked(config.isPerfectFilterOnly());
+
+        isUseOverview = layout.findViewById(R.id.configUseOverview);
+        isUseOverview.setChecked(config.isUseOverview());
+
+        sleepSecondsBetweenLoadPages = layout.findViewById(R.id.configSleepSecondsBetweenLoadPages);
         setPromptSleepSecondsBetweenLoadPages(sleepSecondsBetweenLoadPages.getProgress());
         sleepSecondsBetweenLoadPages.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -45,11 +60,14 @@ public class ConfigFragment extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        sleepSecondsBetweenLoadPages.setProgress(config.getSleepSecondsBetweenLoadPages());
 
         RadioGroup connectionMode = layout.findViewById(R.id.configConnectionMode);
         connectionMode.clearCheck();
-        RadioButton wifi = layout.findViewById(R.id.configConnectionModeWiFi);
-        wifi.setChecked(true);
+        wifi = layout.findViewById(R.id.configConnectionModeWiFi);
+        all = layout.findViewById(R.id.configConnectionModeAll);
+        wifi.setChecked(config.isUseOnlyWiFi());
+        all.setChecked(config.isUseOnlyWiFi());
 
         connectionMode.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
@@ -63,6 +81,16 @@ public class ConfigFragment extends Fragment {
                     break;
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        config.setPerfectFilterOnly(isPerfectFilterOnly.isChecked());
+        config.setSleepSecondsBetweenLoadPages(sleepSecondsBetweenLoadPages.getProgress());
+        config.setUseOnlyWiFi(wifi.isChecked());
+        config.setUseOverview(isUseOverview.isChecked());
+        config.save();
     }
 
     private void setPromptSleepSecondsBetweenLoadPages(int value) {

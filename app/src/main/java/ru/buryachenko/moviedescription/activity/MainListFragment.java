@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
+import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -37,6 +38,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int spanCountHeight;
     private int cellWidth;
     private int cellHeight;
+    private Config config = Config.getInstance();
 
     @Nullable
     @Override
