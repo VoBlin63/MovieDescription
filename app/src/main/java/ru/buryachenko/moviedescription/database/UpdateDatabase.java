@@ -4,6 +4,7 @@ package ru.buryachenko.moviedescription.database;
 import android.content.Context;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -22,36 +23,44 @@ public class UpdateDatabase extends Worker {
     private static final String apiKey = "c3e17ff26735628669886b00d573ab4d";
     private static final String language = "ru-RU";
     private static final String region = "RU";
+    private static AtomicInteger page;
 
     public UpdateDatabase(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        page = new AtomicInteger(1);
     }
+
 
     @NonNull
     @Override
     public Result doWork() {
         AppLog.write("Update DB started");
         saveMoviesInDatabase(apiKey, language, region);
+//        AppLog.write("" + App.getInstance().movieDatabase.movieDao().getCount() + " movies");
+//        AppLog.write("" + App.getInstance().movieDatabase.tagDao().getCount() + " tags");
         AppLog.write("Update DB finished");
         return Result.success();
     }
 
     private void saveMoviesInDatabase(String apiKey, String language, String region) {
-        int page = 1;
+        int res = 0;
         PageMoviesJson data;
         do {
             AppLog.write("Page #" + page + " :");
-            data = MovieLoader.getPage(apiKey, page, language, region);
-            AppLog.write("...was got");
-            int res = 0;
+            data = MovieLoader.getPage(apiKey, page.get(), language, region);
+            if (data == null) {
+                AppLog.write("...no data. Operation completed.");
+                break;
+            }
+            AppLog.write("It was got " + page);
             //App.getInstance().movieDatabase.movieDao().insert(MovieLoader.getMoviesFromPage(data));
             for ( MovieRecord record : MovieLoader.getMoviesFromPage(data)) {
                 saveRecord(record);
                 res ++;
             }
-            AppLog.write("...and stored " + res + " records");
-            page = page + 1;
-            if ((MAX_PAGES_TO_LOAD > 0) && (page >= MAX_PAGES_TO_LOAD)) {
+            AppLog.write("...and stored to " + res + " records " + page);
+            page.incrementAndGet();
+            if ((MAX_PAGES_TO_LOAD > 0) && (page.get() >= MAX_PAGES_TO_LOAD)) {
                 break;
             }
             try {
@@ -59,7 +68,7 @@ public class UpdateDatabase extends Worker {
             } catch (InterruptedException e) {
                 break;
             }
-        } while (data != null);
+        } while (true);
         AppLog.write("" + App.getInstance().movieDatabase.movieDao().getCount() + " movies");
         AppLog.write("" + App.getInstance().movieDatabase.tagDao().getCount() + " tags");
     }

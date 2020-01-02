@@ -5,11 +5,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBackgroundField">
     <TextView
-        android:id="@+id/someItem"
+        android:id="@+id/detailTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="some text"
+        android:textColor="#FFF"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </TextView>
+    <TextView
+        android:id="@+id/detailOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="some text"
+        android:textColor="#FFF"
+        app:layout_constraintTop_toBottomOf="@id/detailTitle"
         app:layout_constraintStart_toStartOf="parent">
 
     </TextView>

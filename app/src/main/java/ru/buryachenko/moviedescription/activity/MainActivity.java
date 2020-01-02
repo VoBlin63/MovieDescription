@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager fragmentManager;
     private MoviesViewModel viewModel;
-    private Config config = Config.getInstance();
+//    private Config config = Config.getInstance();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                viewModel.setFilter(newText, !config.isUseOverview());
+                viewModel.setFilter(newText);
                 return true;
             }
         });

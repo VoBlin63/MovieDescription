@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
+import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
@@ -39,6 +40,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int cellWidth;
     private int cellHeight;
     private Config config = Config.getInstance();
+    MainListAdapter adapter;
 
     @Nullable
     @Override
@@ -56,7 +58,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         setSpanCountsAndSizes();
         final GridLayoutManager layoutManager = new GridLayoutManager(layout.getContext(), spanCountWidth);
         recyclerView.setLayoutManager(layoutManager);
-        MainListAdapter adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
+        adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
         recyclerView.setAdapter(adapter);
 
 //        LiveData<FilmInApp> changedFilm = viewModel.getChangedFilm();
@@ -96,6 +98,15 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
             }
         };
+
+        viewModel.getListReady().observe(this, status -> {
+            AppLog.write("Got list ready: " + status);
+            if (status) {
+                adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
+                recyclerView.setAdapter(adapter);
+//                adapter.notifyDataSetChanged();
+            }
+        });
 
         //serviceUpdateStatus.subscribe(observer);
 

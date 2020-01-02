@@ -30,7 +30,7 @@ public class App extends Application {
         initRetrofit();
 //        initGeoApi();
         initFilmsDatabase();
-        //setUpUpdateDatabase();
+//        setUpUpdateDatabase();
         instance = this;
     }
 

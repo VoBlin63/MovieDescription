@@ -1,6 +1,5 @@
 package ru.buryachenko.moviedescription.activity.MainListRecycler;
 
-import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,23 +7,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.activity.MainActivity;
+import ru.buryachenko.moviedescription.database.MovieRecord;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
 
+    private MovieRecord[] moviesList;
     private MoviesViewModel viewModel;
     private int cellWidth;
     private int cellHeight;
 
     public MainListAdapter(LayoutInflater inflater, MoviesViewModel viewModel, int cellWidth, int cellHeight) {
-        this.viewModel = viewModel;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
+        this.viewModel = viewModel;
+        this.moviesList = viewModel.getListMovies();
     }
 
     @NonNull
@@ -39,12 +40,12 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MainListHolder holder, int position) {
-        holder.bind(viewModel.getListMovies()[position]);
+        holder.bind(moviesList[position]);
     }
 
     @Override
     public int getItemCount() {
-        return viewModel.getListMovies().length;
+        return moviesList.length;
     }
 
     private void openMovie(View view, int adapterPosition) {

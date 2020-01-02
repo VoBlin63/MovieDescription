@@ -33,10 +33,11 @@ public class DetailFragment extends Fragment {
         if (viewModel.getIndexForOpen() != -1) {
             MovieRecord movie = viewModel.getListMovies()[viewModel.getIndexForOpen()];
             AppLog.write("Will work with " + movie.getTitle());
-            ((TextView)layout.findViewById(R.id.someItem)).setText(movie.getTitle());
+            ((TextView)layout.findViewById(R.id.detailTitle)).setText(movie.getTitle());
+            ((TextView)layout.findViewById(R.id.detailOverview)).setText(movie.getOverview());
             viewModel.setIndexForOpen(-1);
         } else {
-            ((TextView)layout.findViewById(R.id.someItem)).setText("empty");
+            ((TextView)layout.findViewById(R.id.detailTitle)).setText("empty");
             AppLog.write("No movie for open");
         }
     }

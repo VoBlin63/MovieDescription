@@ -5,6 +5,7 @@ import android.util.SparseArray;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
@@ -14,21 +15,20 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.database.MovieRecord;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.utilities.ConvertibleTerms;
 import ru.buryachenko.moviedescription.utilities.Metaphone;
 import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
-import static ru.buryachenko.moviedescription.Constant.IS_PERFECT_FILTER_ONLY;
-
 public class MoviesViewModel extends ViewModel {
 
     private String textFilter = "";
-    private boolean onlyTitle = false;
-
     private int indexForOpen = -1;
+    private Config config = Config.getInstance();
 
     private SparseArray<MovieRecord> movies = new SparseArray();
     private MutableLiveData<Boolean> listReady = new MutableLiveData<>();
@@ -37,9 +37,7 @@ public class MoviesViewModel extends ViewModel {
 
     private MovieRecord[] moviesOnScreen;
 
-    private boolean isEmptyUsefulness(int movieId) {
-        return movies.get(movieId) == null || movies.get(movieId).getUsefulness() == EMPTY_USEFULNESS;
-    }
+    private PublishSubject<String> filterQueue = PublishSubject.create();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void init() {
@@ -75,6 +73,9 @@ public class MoviesViewModel extends ViewModel {
                         }
                     });
         }
+        filterQueue
+                .debounce(1500L, TimeUnit.MILLISECONDS)
+                .subscribe(value -> setFilterAfterDebounce(value));
     }
 
     public MovieRecord[] getListMovies() {
@@ -85,12 +86,12 @@ public class MoviesViewModel extends ViewModel {
 
     private void fillMoviesOnScreen() {
         int count = 0;
-        if (!IS_PERFECT_FILTER_ONLY
-            || getTextFilter().isEmpty()) {
+        if (!config.isPerfectFilterOnly()
+                || getTextFilter().isEmpty()) {
             count = movies.size();
         } else {
             for (int index = 0; index < movies.size(); index++) {
-                if (!isEmptyUsefulness(movies.get(movies.keyAt(index)).getId())) {
+                if (movies.valueAt(index).getUsefulness() != EMPTY_USEFULNESS) {
                     count = count + 1;
                 }
             }
@@ -98,14 +99,14 @@ public class MoviesViewModel extends ViewModel {
         MovieRecord[] res = new MovieRecord[count];
         int currentIndex = 0;
         for (int index = 0; index < movies.size(); index++) {
-            if (!IS_PERFECT_FILTER_ONLY
-                    || !isEmptyUsefulness(movies.get(movies.keyAt(index)).getId())
+            if (!config.isPerfectFilterOnly()
+                    || movies.valueAt(index).getUsefulness() != EMPTY_USEFULNESS
                     || getTextFilter().isEmpty()
-            )
-            {
-                res[currentIndex++] = movies.get(movies.keyAt(index));
+            ) {
+                res[currentIndex++] = movies.valueAt(index);
             }
         }
+
         Arrays.sort(res, (a, b) -> a.getCompareFlag().compareTo(b.getCompareFlag()));
         moviesOnScreen = res;
     }
@@ -116,9 +117,12 @@ public class MoviesViewModel extends ViewModel {
         }
     }
 
-    public void setFilter(String textFilter, boolean onlyTitle) {
+    public void setFilter(String textFilter) {
+        filterQueue.onNext(textFilter);
+    }
+
+    private void setFilterAfterDebounce(String textFilter) {
         this.textFilter = textFilter;
-        this.onlyTitle = onlyTitle;
         clearUsefulness();
         List<String> wordsList = SonicUtils.getWordsList(textFilter);
         moviesOnScreen = null;
@@ -130,12 +134,12 @@ public class MoviesViewModel extends ViewModel {
         Observable.fromIterable(wordsList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-//                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
+                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
                 .map(Metaphone::metaphone)
-//                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
+                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
                 .map(ConvertibleTerms::topWord)
-//                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
-                .map(code -> App.getInstance().movieDatabase.tagDao().getSyncMovieIdsByTags(code, onlyTitle))
+                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
+                .map(code -> App.getInstance().movieDatabase.tagDao().getSyncMovieIdsByTags(code, !config.isUseOverview()))
                 .subscribe(new Observer<List<Integer>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -167,15 +171,12 @@ public class MoviesViewModel extends ViewModel {
         if (tmp != null) {
             tmp.setUsefulness(tmp.getUsefulness() - 1);
             AppLog.write("id " + movieId + " was marked");
+            AppLog.write(movies.get(movieId).getTitle() + "  " + movies.get(movieId).getId());
         }
     }
 
     public String getTextFilter() {
         return textFilter;
-    }
-
-    public boolean getOnlyTitleFilter() {
-        return onlyTitle;
     }
 
     public LiveData<Boolean> getListReady() {
