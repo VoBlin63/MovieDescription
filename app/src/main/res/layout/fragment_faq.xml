@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundField"
+    android:divider="@drawable/config_separator"
+    android:dividerPadding="@dimen/horizontal_margin"
+    android:orientation="vertical"
+    android:showDividers="middle">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="FAQ is under construction..."
+        android:textColor="#FFF"
+        android:background="@color/colorBackgroundField">
+
+    </TextView>
+
+
+</LinearLayout>

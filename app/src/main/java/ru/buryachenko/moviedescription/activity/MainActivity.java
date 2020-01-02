@@ -25,15 +25,17 @@ import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_FAQ;
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_LIKED;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 
 public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager fragmentManager;
     private MoviesViewModel viewModel;
-//    private Config config = Config.getInstance();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -60,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
         callFragment(FRAGMENT_MAIN_LIST);
     }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Fragment existFragment = fragmentManager.findFragmentByTag(FRAGMENT_MAIN_LIST);
+//        if (existFragment == null) {
+//            callFragment(FRAGMENT_MAIN_LIST);
+//        }
+//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         SearchView mSearchView = findViewById(R.id.searchItem);
@@ -82,10 +93,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean clickDrawerMenu(int idMenuItem) {
         switch (idMenuItem) {
             case R.id.menuAboutApp:
+                callFragment(FRAGMENT_ABOUT);
                 break;
             case R.id.menuFaq:
+                callFragment(FRAGMENT_FAQ);
                 break;
             case R.id.menuLikedList:
+                callFragment(FRAGMENT_LIKED);
                 break;
             case R.id.menuQuit:
                 tryToQuit();
@@ -105,7 +119,11 @@ public class MainActivity extends AppCompatActivity {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                super.onBackPressed();
+            } else {
+                tryToQuit();
+            }
         }
     }
 
@@ -128,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case FRAGMENT_DETAIL:
                 toCall = new DetailFragment();
+                break;
+            case FRAGMENT_FAQ:
+                toCall = new FaqFragment();
+                break;
+            case FRAGMENT_ABOUT:
+                toCall = new AboutFragment();
+                break;
+            case FRAGMENT_LIKED:
+                toCall = new LikedFragment();
                 break;
             default:
                 toCall = null;

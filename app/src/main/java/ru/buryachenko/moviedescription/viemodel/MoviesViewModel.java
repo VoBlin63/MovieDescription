@@ -49,7 +49,7 @@ public class MoviesViewModel extends ViewModel {
                     .subscribe(new Observer<List<MovieRecord>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
-                            setListReady(false);
+                            listReady.postValue(false);
                             movies.clear();
                             moviesOnScreen = null;
                             AppLog.write("Begin reforming");
@@ -59,7 +59,7 @@ public class MoviesViewModel extends ViewModel {
                         public void onNext(List<MovieRecord> movieRecords) {
                             movieRecords.forEach(it -> movies.put(it.getId(), it));
                             clearUsefulness();
-                            setListReady(true);
+                            listReady.postValue(true);
                             AppLog.write("Got list");
                         }
 
@@ -74,8 +74,9 @@ public class MoviesViewModel extends ViewModel {
                     });
         }
         filterQueue
-                .debounce(1500L, TimeUnit.MILLISECONDS)
+                .debounce(700L, TimeUnit.MILLISECONDS)
                 .subscribe(value -> setFilterAfterDebounce(value));
+        filterQueue.onNext(getTextFilter());
     }
 
     public MovieRecord[] getListMovies() {
@@ -118,16 +119,18 @@ public class MoviesViewModel extends ViewModel {
     }
 
     public void setFilter(String textFilter) {
+        AppLog.write("got filter: '" + textFilter + "'");
         filterQueue.onNext(textFilter);
     }
 
     private void setFilterAfterDebounce(String textFilter) {
+        AppLog.write("got DEBOUNCED filter: '" + textFilter + "'");
         this.textFilter = textFilter;
         clearUsefulness();
         List<String> wordsList = SonicUtils.getWordsList(textFilter);
         moviesOnScreen = null;
         if (wordsList.isEmpty()) {
-            setListReady(true);
+            listReady.postValue(true);
             return;
         }
 
@@ -143,7 +146,8 @@ public class MoviesViewModel extends ViewModel {
                 .subscribe(new Observer<List<Integer>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        setListReady(false);
+                        listReady.postValue(false);
+//                        setListReady(false);
                     }
 
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -161,7 +165,8 @@ public class MoviesViewModel extends ViewModel {
                     @Override
                     public void onComplete() {
                         AppLog.write("Filter was set");
-                        setListReady(true);
+                        listReady.postValue(true);
+//                        setListReady(true);
                     }
                 });
     }
@@ -181,12 +186,6 @@ public class MoviesViewModel extends ViewModel {
 
     public LiveData<Boolean> getListReady() {
         return listReady;
-    }
-
-    private void setListReady(boolean newValue) {
-        if (listReady.getValue() == null || listReady.getValue() != newValue) {
-            listReady.postValue(newValue);
-        }
     }
 
     public int getIndexForOpen() {
