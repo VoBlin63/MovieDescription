@@ -4,20 +4,24 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
+import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
@@ -27,40 +31,51 @@ import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager fragmentManager;
+    private MoviesViewModel viewModel;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         fragmentManager = getSupportFragmentManager();
 
-        MoviesViewModel viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         viewModel.init();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar,
+                R.string.drawerOpen, R.string.drawerClose);
+        toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> clickDrawerMenu(item.getItemId()));
 
         callFragment(FRAGMENT_MAIN_LIST);
-        //callFragment(FRAGMENT_CONFIG);
+    }
 
-//        EditText filter = findViewById(R.id.filter);
-//        findViewById(R.id.button).setOnClickListener(view -> {
-//            viewModel.setFilter(filter.getText().toString(), true);
-//        });
-//        androidx.lifecycle.LiveData<Boolean> isListReady = viewModel.getListReady();
-//        isListReady.observe(this, status -> {
-//            if (status) {
-//                AppLog.write("List is ready:");
-//                for (int i = 0; i < viewModel.getListMovies().length; i++) {
-//                    AppLog.write(viewModel.getListMovies()[i].getId() + " [" + viewModel.getListMovies()[i].getUsefulness() + "] " + viewModel.getListMovies()[i].getTitle());
-//                }
-//            } else {
-//                AppLog.write("List is reforming...");
-//            }
-//        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        SearchView mSearchView = findViewById(R.id.searchItem);
+        mSearchView.setQueryHint("Search");
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                AppLog.write("onQueryTextChange to " + newText);
+                viewModel.setFilter(newText, true);
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     private boolean clickDrawerMenu(int idMenuItem) {

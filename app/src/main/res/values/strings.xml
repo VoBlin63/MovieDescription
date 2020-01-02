@@ -19,4 +19,6 @@
     <string name="mainActivityAskToExit">Вы хотите выйти?</string>
     <string name="mainActivityAskToExitYes">Нет, остаться</string>
     <string name="mainActivityAskToExitCancel">Да, выйти</string>
+    <string name="drawerOpen">R.string.navigation_drawer_open</string>
+    <string name="drawerClose">R.string.navigation_drawer_close</string>
 </resources>
