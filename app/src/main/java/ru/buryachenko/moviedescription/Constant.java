@@ -11,4 +11,11 @@ public final class Constant {
     public static final String FRAGMENT_LIKED = "LIKED";
     public static final String FRAGMENT_MAIN_LIST = "MAIN_LIST";
     public static final String FRAGMENT_DETAIL = "DETAIL";
+
+    public static final String CONFIG_KEY_USE_OVERVIEW = "KEY_USE_OVERVIEW";
+    public static final String CONFIG_KEY_SHOW_ONLY_FIT_FILTER = "KEY_SHOW_ONLY_FIT_FILTER";
+    public static final String CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES = "KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES";
+    public static final String CONFIG_KEY_USE_ONLY_WIFI = "KEY_USE_ONLY_WIFI";
+    public static final String KEY_NEXT_TIME_TO_UPDATE = "KEY_NEXT_TIME_TO_UPDATE";
+
 }

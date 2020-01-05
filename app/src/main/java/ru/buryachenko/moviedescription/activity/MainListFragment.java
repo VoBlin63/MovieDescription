@@ -28,7 +28,6 @@ import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
 import ru.buryachenko.moviedescription.utilities.AppLog;
-import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -41,7 +40,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int spanCountHeight;
     private int cellWidth;
     private int cellHeight;
-    MainListAdapter adapter;
+    private MainListAdapter adapter;
 
     @Nullable
     @Override
@@ -80,6 +79,21 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
             }
         });
 
+        UUID updater = App.getInstance().setUpUpdateDatabase(false);
+        if (updater != null) {
+            swipeRefresher.setRefreshing(true);
+            setUpBusyStatus(updater);
+        }
+    }
+
+    private void setUpBusyStatus(UUID updater) {
+        WorkManager.getInstance().getWorkInfoByIdLiveData(updater).observe(this, workInfo -> {
+            if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                swipeRefresher.setRefreshing(false);
+            } else {
+                AppLog.write(" setUpUpdateDatabase finished status : " + workInfo.getState());
+            }
+        });
     }
 
     @Override
@@ -88,18 +102,8 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         DialogInterface.OnClickListener listener =
                 (dialog, which) -> {
                     if (which == Dialog.BUTTON_POSITIVE) {
-                        App.getInstance().setUpUpdateDatabase();
-                        UUID updater = App.getInstance().setUpUpdateDatabase();
-                        WorkManager.getInstance().getWorkInfoByIdLiveData(updater).observe(this, new androidx.lifecycle.Observer<WorkInfo>() {
-                            @Override
-                            public void onChanged(WorkInfo workInfo) {
-                                if( workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                                    swipeRefresher.setRefreshing(false);
-                                } else {
-                                    AppLog.write(" setUpUpdateDatabase finished status : " + workInfo.getState());
-                                }
-                            }
-                        });
+                        UUID updater = App.getInstance().setUpUpdateDatabase(true);
+                        setUpBusyStatus(updater);
                     } else {
                         swipeRefresher.setRefreshing(false);
                     }
@@ -130,10 +134,10 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
             spanCountHeight = 2;
         }
         int shiftX = Math.round(
-                (getResources().getDimension(R.dimen.horizontal_margin)*2 + getResources().getDimension(R.dimen.cell_border_space)*2*spanCountWidth)
+                (getResources().getDimension(R.dimen.horizontal_margin) * 2 + getResources().getDimension(R.dimen.cell_border_space) * 2 * spanCountWidth)
         );
         int shiftY = Math.round(
-                (getResources().getDimension(R.dimen.horizontal_margin)*2 + getResources().getDimension(R.dimen.cell_border_space)*2*spanCountHeight)
+                (getResources().getDimension(R.dimen.horizontal_margin) * 2 + getResources().getDimension(R.dimen.cell_border_space) * 2 * spanCountHeight)
         );
         Point size = getScreenSize();
         cellWidth = (size.x - shiftX) / spanCountWidth;

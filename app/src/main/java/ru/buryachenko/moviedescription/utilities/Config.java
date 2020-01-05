@@ -1,19 +1,30 @@
 package ru.buryachenko.moviedescription.utilities;
 
+import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_SHOW_ONLY_FIT_FILTER;
+import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES;
+import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_USE_ONLY_WIFI;
+import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_USE_OVERVIEW;
+
 public class Config
 {
     private static Config config;
     private boolean isUseOverview = true;
-    private boolean isPerfectFilterOnly = true;
+    private boolean isShowOnlyFitFilter = true;
     private int sleepSecondsBetweenLoadPages = 7;
     private boolean isUseOnlyWiFi = true;
 
     public void load() {
-        //TODO
+        isUseOverview = Boolean.parseBoolean(SharedPreferencesOperation.load(CONFIG_KEY_USE_OVERVIEW,"FALSE"));
+        isShowOnlyFitFilter = Boolean.parseBoolean(SharedPreferencesOperation.load(CONFIG_KEY_SHOW_ONLY_FIT_FILTER,"TRUE"));
+        sleepSecondsBetweenLoadPages = Integer.parseInt(SharedPreferencesOperation.load(CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES,"7"));
+        isUseOnlyWiFi = Boolean.parseBoolean(SharedPreferencesOperation.load(CONFIG_KEY_USE_ONLY_WIFI,"TRUE"));
     }
 
     public void save() {
-        //TODO
+        SharedPreferencesOperation.save(CONFIG_KEY_USE_OVERVIEW, String.valueOf(isUseOverview));
+        SharedPreferencesOperation.save(CONFIG_KEY_SHOW_ONLY_FIT_FILTER,String.valueOf(isShowOnlyFitFilter));
+        SharedPreferencesOperation.save(CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES,String.valueOf(sleepSecondsBetweenLoadPages));
+        SharedPreferencesOperation.save(CONFIG_KEY_USE_ONLY_WIFI,String.valueOf(isUseOnlyWiFi));
     }
 
     private Config() {
@@ -31,8 +42,8 @@ public class Config
         return isUseOverview;
     }
 
-    public boolean isPerfectFilterOnly() {
-        return isPerfectFilterOnly;
+    public boolean isShowOnlyFitFilter() {
+        return isShowOnlyFitFilter;
     }
 
     public int getSleepSecondsBetweenLoadPages() {
@@ -47,8 +58,8 @@ public class Config
         isUseOverview = useOverview;
     }
 
-    public void setPerfectFilterOnly(boolean perfectFilterOnly) {
-        isPerfectFilterOnly = perfectFilterOnly;
+    public void setShowOnlyFitFilter(boolean showOnlyFitFilter) {
+        isShowOnlyFitFilter = showOnlyFitFilter;
     }
 
     public void setSleepSecondsBetweenLoadPages(int sleepSecondsBetweenLoadPages) {

@@ -21,8 +21,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.R;
-import ru.buryachenko.moviedescription.utilities.AppLog;
-import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
@@ -61,15 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         callFragment(FRAGMENT_MAIN_LIST);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Fragment existFragment = fragmentManager.findFragmentByTag(FRAGMENT_MAIN_LIST);
-//        if (existFragment == null) {
-//            callFragment(FRAGMENT_MAIN_LIST);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

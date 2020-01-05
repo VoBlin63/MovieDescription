@@ -39,7 +39,7 @@ public class ConfigFragment extends Fragment {
         layout = view;
 
         isPerfectFilterOnly = layout.findViewById(R.id.configIsPerfectFilterOnly);
-        isPerfectFilterOnly.setChecked(config.isPerfectFilterOnly());
+        isPerfectFilterOnly.setChecked(config.isShowOnlyFitFilter());
 
         isUseOverview = layout.findViewById(R.id.configUseOverview);
         isUseOverview.setChecked(config.isUseOverview());
@@ -67,7 +67,7 @@ public class ConfigFragment extends Fragment {
         wifi = layout.findViewById(R.id.configConnectionModeWiFi);
         all = layout.findViewById(R.id.configConnectionModeAll);
         wifi.setChecked(config.isUseOnlyWiFi());
-        all.setChecked(config.isUseOnlyWiFi());
+        all.setChecked(!config.isUseOnlyWiFi());
 
         connectionMode.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
@@ -86,7 +86,7 @@ public class ConfigFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        config.setPerfectFilterOnly(isPerfectFilterOnly.isChecked());
+        config.setShowOnlyFitFilter(isPerfectFilterOnly.isChecked());
         config.setSleepSecondsBetweenLoadPages(sleepSecondsBetweenLoadPages.getProgress());
         config.setUseOnlyWiFi(wifi.isChecked());
         config.setUseOverview(isUseOverview.isChecked());

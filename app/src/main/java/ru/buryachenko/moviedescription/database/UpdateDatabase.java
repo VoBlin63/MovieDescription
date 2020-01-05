@@ -3,6 +3,7 @@ package ru.buryachenko.moviedescription.database;
 
 import android.content.Context;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,8 +14,10 @@ import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.api.MovieLoader;
 import ru.buryachenko.moviedescription.api.PageMoviesJson;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.SharedPreferencesOperation;
 import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
+import static ru.buryachenko.moviedescription.Constant.KEY_NEXT_TIME_TO_UPDATE;
 import static ru.buryachenko.moviedescription.Constant.MAX_PAGES_TO_LOAD;
 import static ru.buryachenko.moviedescription.Constant.SLEEP_SECONDS_BETWEEN_LOAD_PAGES;
 
@@ -36,8 +39,7 @@ public class UpdateDatabase extends Worker {
     public Result doWork() {
         AppLog.write("Update DB started");
         saveMoviesInDatabase(apiKey, language, region);
-//        AppLog.write("" + App.getInstance().movieDatabase.movieDao().getCount() + " movies");
-//        AppLog.write("" + App.getInstance().movieDatabase.tagDao().getCount() + " tags");
+        SharedPreferencesOperation.save(KEY_NEXT_TIME_TO_UPDATE, String.valueOf(new Date().getTime() + 1000L * 60 * 60 * 24));
         AppLog.write("Update DB finished");
         return Result.success();
     }
@@ -53,10 +55,9 @@ public class UpdateDatabase extends Worker {
                 break;
             }
             AppLog.write("It was got " + page);
-            //App.getInstance().movieDatabase.movieDao().insert(MovieLoader.getMoviesFromPage(data));
-            for ( MovieRecord record : MovieLoader.getMoviesFromPage(data)) {
+            for (MovieRecord record : MovieLoader.getMoviesFromPage(data)) {
                 saveRecord(record);
-                res ++;
+                res++;
             }
             AppLog.write("...and stored to " + res + " records " + page);
             page.incrementAndGet();

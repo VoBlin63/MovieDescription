@@ -2,6 +2,7 @@ package ru.buryachenko.moviedescription;
 
 import android.app.Application;
 
+import java.util.Date;
 import java.util.UUID;
 
 import androidx.room.Room;
@@ -15,7 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.buryachenko.moviedescription.api.TmdbApiService;
 import ru.buryachenko.moviedescription.database.MovieDatabase;
 import ru.buryachenko.moviedescription.database.UpdateDatabase;
+import ru.buryachenko.moviedescription.utilities.SharedPreferencesOperation;
 
+import static ru.buryachenko.moviedescription.Constant.KEY_NEXT_TIME_TO_UPDATE;
 import static ru.buryachenko.moviedescription.Constant.UPDATE_DATABASE_WORK_TAG;
 
 public class App extends Application {
@@ -94,13 +97,18 @@ public class App extends Application {
 //        }
 //    }
 
-    public UUID setUpUpdateDatabase() {
-        WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);
-        OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UpdateDatabase.class)
-                .addTag(UPDATE_DATABASE_WORK_TAG)
-                .build();
-        WorkManager.getInstance().enqueue(uploadWorkRequest);
-        return uploadWorkRequest.getId();
+    public UUID setUpUpdateDatabase(boolean hardMode) {
+        long timeToUpdate = Long.parseLong(SharedPreferencesOperation.load(KEY_NEXT_TIME_TO_UPDATE,"0"));
+        if (hardMode || new Date().getTime() >= timeToUpdate) {
+            WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);
+            OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UpdateDatabase.class)
+                    .addTag(UPDATE_DATABASE_WORK_TAG)
+                    .build();
+            WorkManager.getInstance().enqueue(uploadWorkRequest);
+            return uploadWorkRequest.getId();
+        } else {
+            return null;
+        }
     }
 
 }

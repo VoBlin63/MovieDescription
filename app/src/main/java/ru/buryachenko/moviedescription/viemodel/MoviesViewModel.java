@@ -87,7 +87,7 @@ public class MoviesViewModel extends ViewModel {
 
     private void fillMoviesOnScreen() {
         int count = 0;
-        if (!config.isPerfectFilterOnly()
+        if (!config.isShowOnlyFitFilter()
                 || getTextFilter().isEmpty()) {
             count = movies.size();
         } else {
@@ -100,7 +100,7 @@ public class MoviesViewModel extends ViewModel {
         MovieRecord[] res = new MovieRecord[count];
         int currentIndex = 0;
         for (int index = 0; index < movies.size(); index++) {
-            if (!config.isPerfectFilterOnly()
+            if (!config.isShowOnlyFitFilter()
                     || movies.valueAt(index).getUsefulness() != EMPTY_USEFULNESS
                     || getTextFilter().isEmpty()
             ) {
