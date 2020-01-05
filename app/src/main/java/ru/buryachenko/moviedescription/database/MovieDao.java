@@ -19,18 +19,7 @@ public interface MovieDao {
     @Query("SELECT count(*) FROM movierecord")
     int getCount();
 
-//    @Query("SELECT * FROM movierecord WHERE id = :id")
-//    MovieRecord getById(int id);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(MovieRecord movie);
 
-//    @Update
-//    void update(MovieRecord movie);
-
-//    @Delete
-//    void delete(MovieRecord movie);
-
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void insert(List<MovieRecord> movies);
 }

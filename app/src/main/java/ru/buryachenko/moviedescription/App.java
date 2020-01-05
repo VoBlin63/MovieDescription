@@ -2,6 +2,8 @@ package ru.buryachenko.moviedescription;
 
 import android.app.Application;
 
+import java.util.UUID;
+
 import androidx.room.Room;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -92,12 +94,13 @@ public class App extends Application {
 //        }
 //    }
 
-    public void setUpUpdateDatabase() {
+    public UUID setUpUpdateDatabase() {
         WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);
         OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UpdateDatabase.class)
                 .addTag(UPDATE_DATABASE_WORK_TAG)
                 .build();
         WorkManager.getInstance().enqueue(uploadWorkRequest);
+        return uploadWorkRequest.getId();
     }
 
 }

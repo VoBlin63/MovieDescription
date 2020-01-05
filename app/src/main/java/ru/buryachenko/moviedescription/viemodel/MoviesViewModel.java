@@ -137,17 +137,16 @@ public class MoviesViewModel extends ViewModel {
         Observable.fromIterable(wordsList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
+//                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
                 .map(Metaphone::metaphone)
-                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
+//                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
                 .map(ConvertibleTerms::topWord)
-                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
+//                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
                 .map(code -> App.getInstance().movieDatabase.tagDao().getSyncMovieIdsByTags(code, !config.isUseOverview()))
                 .subscribe(new Observer<List<Integer>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         listReady.postValue(false);
-//                        setListReady(false);
                     }
 
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -158,15 +157,12 @@ public class MoviesViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
+                    public void onError(Throwable e) { }
 
                     @Override
                     public void onComplete() {
                         AppLog.write("Filter was set");
                         listReady.postValue(true);
-//                        setListReady(true);
                     }
                 });
     }

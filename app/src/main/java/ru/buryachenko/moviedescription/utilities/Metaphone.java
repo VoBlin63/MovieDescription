@@ -30,6 +30,10 @@ public class Metaphone {
      * @param txt String to find the metaphone code for
      * @return A metaphone code corresponding to the String supplied
      */
+//    public static String metaphone(String txt) {
+//        return txt.toUpperCase();
+//    }
+
     public static String metaphone(String txt) {
         boolean hard = false;
         if ((txt == null) || (txt.length() == 0)) {

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import java.util.UUID;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -20,8 +22,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
@@ -39,7 +41,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int spanCountHeight;
     private int cellWidth;
     private int cellHeight;
-    private Config config = Config.getInstance();
     MainListAdapter adapter;
 
     @Nullable
@@ -71,44 +72,13 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
 
-        //serviceUpdateStatus = ServiceDb.getStatus();
-        Observer<String> observer = new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(String s) {
-                if (true) {
-//                if (STATUS_SERVICE_BUSY.equals(s)) {
-                    swipeRefresher.setRefreshing(true);
-                } else {
-                    swipeRefresher.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-
         viewModel.getListReady().observe(this, status -> {
             AppLog.write("Got list ready: " + status);
             if (status) {
                 adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
                 recyclerView.setAdapter(adapter);
-//                adapter.notifyDataSetChanged();
             }
         });
-
-        //serviceUpdateStatus.subscribe(observer);
 
     }
 
@@ -118,8 +88,18 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         DialogInterface.OnClickListener listener =
                 (dialog, which) -> {
                     if (which == Dialog.BUTTON_POSITIVE) {
-                        //callDbUpdateService();
                         App.getInstance().setUpUpdateDatabase();
+                        UUID updater = App.getInstance().setUpUpdateDatabase();
+                        WorkManager.getInstance().getWorkInfoByIdLiveData(updater).observe(this, new androidx.lifecycle.Observer<WorkInfo>() {
+                            @Override
+                            public void onChanged(WorkInfo workInfo) {
+                                if( workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                                    swipeRefresher.setRefreshing(false);
+                                } else {
+                                    AppLog.write(" setUpUpdateDatabase finished status : " + workInfo.getState());
+                                }
+                            }
+                        });
                     } else {
                         swipeRefresher.setRefreshing(false);
                     }
@@ -159,5 +139,4 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         cellWidth = (size.x - shiftX) / spanCountWidth;
         cellHeight = (size.y - shiftY) / spanCountHeight;
     }
-
 }
