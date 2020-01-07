@@ -1,10 +1,14 @@
 package ru.buryachenko.moviedescription.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
+import android.view.WindowManager;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -163,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         DialogInterface.OnClickListener listener =
                 (dialog, which) -> {
                     if (which == Dialog.BUTTON_POSITIVE) {
-                        System.exit(0);
+                        viewModel.pushLiked(true);
                     }
                     dialog.dismiss();
                 };

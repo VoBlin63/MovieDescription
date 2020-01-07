@@ -16,13 +16,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </ImageView>
+
     <ImageView
+        android:id="@+id/mainListItemLiked"
         android:layout_width="1dp"
         android:layout_height="1dp"
-        android:id="@+id/mainListItemLiked"
+        android:background="@color/colorPrimary"
         android:src="@drawable/ic_liked"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </ImageView>
 

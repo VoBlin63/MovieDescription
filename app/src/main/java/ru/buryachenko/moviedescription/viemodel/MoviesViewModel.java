@@ -2,7 +2,9 @@ package ru.buryachenko.moviedescription.viemodel;
 
 import android.os.Build;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,18 +27,14 @@ import ru.buryachenko.moviedescription.utilities.Metaphone;
 import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
 public class MoviesViewModel extends ViewModel {
-
     private String textFilter = "";
     private int indexForOpen = -1;
     private Config config = Config.getInstance();
-
     private SparseArray<MovieRecord> movies = new SparseArray();
     private MutableLiveData<Boolean> listReady = new MutableLiveData<>();
-
+    private SparseBooleanArray cacheLiked = new SparseBooleanArray();
     private final int EMPTY_USEFULNESS = 9999;
-
     private MovieRecord[] moviesOnScreen;
-
     private PublishSubject<String> filterQueue = PublishSubject.create();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -119,16 +117,52 @@ public class MoviesViewModel extends ViewModel {
     }
 
     public void setFilter(String textFilter) {
-        AppLog.write("got filter: '" + textFilter + "'");
         filterQueue.onNext(textFilter);
     }
+
+    public void turnLiked(int adapterPosition) {
+        MovieRecord movie = moviesOnScreen[adapterPosition];
+        movie.turnLiked();
+        cacheLiked.put(movie.getId(), movie.isLiked());
+    }
+
+    public void pushLiked(boolean exitOnFinish) {
+        Observable.range(0, cacheLiked.size())
+                .observeOn(Schedulers.io())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {}
+
+                    @Override
+                    public void onNext(Integer index) {
+                        AppLog.write(" Change liked for " + index);
+                        App.getInstance().movieDatabase.movieDao().setLiked(cacheLiked.keyAt(index), cacheLiked.valueAt(index));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {}
+
+                    @Override
+                    public void onComplete() {
+                        cacheLiked.clear();
+                        if (exitOnFinish) {
+                            System.exit(0);
+                        }
+                    }
+                });
+    }
+
+    public void resetList() {
+        moviesOnScreen = null;
+    }
+
 
     private void setFilterAfterDebounce(String textFilter) {
         AppLog.write("got DEBOUNCED filter: '" + textFilter + "'");
         this.textFilter = textFilter;
         clearUsefulness();
         List<String> wordsList = SonicUtils.getWordsList(textFilter);
-        moviesOnScreen = null;
+        resetList();
         if (wordsList.isEmpty()) {
             listReady.postValue(true);
             return;
@@ -157,7 +191,8 @@ public class MoviesViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onError(Throwable e) { }
+                    public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onComplete() {

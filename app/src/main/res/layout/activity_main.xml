@@ -14,12 +14,12 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/toolbar">
+            android:theme="@style/Toolbar">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
-                style="@style/toolbar"
-                android:popupTheme="@style/toolbar">
+                style="@style/Toolbar"
+                android:popupTheme="@style/Toolbar">
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchItem"

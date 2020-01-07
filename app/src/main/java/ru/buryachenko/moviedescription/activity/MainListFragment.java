@@ -61,9 +61,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
         recyclerView.setAdapter(adapter);
 
-//        LiveData<FilmInApp> changedFilm = viewModel.getChangedFilm();
-//        changedFilm.observe(this, film -> notifyChanges(adapter, film));
-
         swipeRefresher = layout.findViewById(R.id.mainListSwipeRefresh);
         swipeRefresher.setOnRefreshListener(this);
         swipeRefresher.setColorSchemeResources(R.color.colorPrimary,
@@ -74,6 +71,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         viewModel.getListReady().observe(this, status -> {
             AppLog.write("Got list ready: " + status);
             if (status) {
+                viewModel.resetList();
                 adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
                 recyclerView.setAdapter(adapter);
             }
@@ -86,6 +84,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         }
     }
 
+
     private void setUpBusyStatus(UUID updater) {
         WorkManager.getInstance().getWorkInfoByIdLiveData(updater).observe(this, workInfo -> {
             if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
@@ -94,6 +93,12 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 AppLog.write(" setUpUpdateDatabase finished status : " + workInfo.getState());
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        viewModel.pushLiked(false);
     }
 
     @Override

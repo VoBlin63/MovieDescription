@@ -2,10 +2,15 @@ package ru.buryachenko.moviedescription.database;
 
 import android.annotation.SuppressLint;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import ru.buryachenko.moviedescription.api.MovieJson;
+import ru.buryachenko.moviedescription.utilities.AppLog;
 
 @Entity
 public class MovieRecord {
@@ -22,6 +27,7 @@ public class MovieRecord {
     private Float voteAverage;
     private String overview;
     private String releaseDate;
+    private String backdropPath;
     private boolean liked;
     @Ignore
     private int usefulness;
@@ -37,14 +43,9 @@ public class MovieRecord {
         originalLanguage = filmJson.getOriginalLanguage();
         originalTitle = filmJson.getOriginalTitle();
         voteAverage = filmJson.getVoteAverage();
-        releaseDate =  filmJson.getReleaseDate();
+        releaseDate = filmJson.getReleaseDate();
         liked = false;
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            releaseDate = formatter.parse(filmJson.getReleaseDate());
-//        } catch (ParseException ignored) {}
-
-
+        backdropPath = "https://image.tmdb.org/t/p/w500/" + filmJson.getBackdropPath();
     }
 
     public MovieRecord() {
@@ -158,5 +159,17 @@ public class MovieRecord {
 
     public void setUsefulness(int usefulness) {
         this.usefulness = usefulness;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public void turnLiked() {
+        liked = !liked;
     }
 }

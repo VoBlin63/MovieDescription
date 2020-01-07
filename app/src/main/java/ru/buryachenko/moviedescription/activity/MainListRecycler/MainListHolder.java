@@ -30,8 +30,8 @@ public class MainListHolder extends RecyclerView.ViewHolder {
 
         liked = itemView.findViewById(R.id.mainListItemLiked);
         ConstraintLayout.LayoutParams likedParams = (ConstraintLayout.LayoutParams) liked.getLayoutParams();
-        likedParams.width = cellWidth / 5;
-        likedParams.height = cellHeight / 5;
+        likedParams.width = cellWidth / 7;
+        likedParams.height = cellHeight / 9;
         liked.setLayoutParams(likedParams);
     }
 
@@ -42,7 +42,7 @@ public class MainListHolder extends RecyclerView.ViewHolder {
                 .placeholder(R.drawable.ic_loading_poster)
                 .error(R.drawable.ic_poster_blank)
                 .into(picture);
-//        liked.setImageResource(film.getLiked() ? R.drawable.liked : R.drawable.notliked);
+        liked.setVisibility(movie.isLiked()? View.VISIBLE : View.INVISIBLE);
     }
 
 }

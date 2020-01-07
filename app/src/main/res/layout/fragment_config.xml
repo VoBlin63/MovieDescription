@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundField"
+    android:clickable="true"
     android:divider="@drawable/config_separator"
     android:dividerPadding="@dimen/horizontal_margin"
+    android:focusable="true"
     android:orientation="vertical"
     android:showDividers="middle">
 
@@ -86,30 +88,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_element_height">
 
-        <TextView
-            style="@style/ListConfig"
-            android:text="@string/config_refreshMode"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints" />
+            <TextView
+                style="@style/ListConfig"
+                android:text="@string/config_refreshMode"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <RadioGroup
             android:id="@+id/configConnectionMode"
             style="@style/ListConfig"
-            android:height="@dimen/list_element_height"
             android:layout_width="match_parent"
+            android:height="@dimen/list_element_height"
             android:theme="@style/ListConfig">
 
             <RadioButton
                 android:id="@+id/configConnectionModeWiFi"
                 style="@style/ListConfig"
-                android:height="@dimen/list_element_height"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_element_height"
+                android:height="@dimen/list_element_height"
                 android:text="@string/config_refreshModeWiFi"
                 android:theme="@style/ListConfig" />
 

@@ -35,6 +35,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
                 .inflate(R.layout.fragment_mainlist_item_movie, parent, false);
         MainListHolder res = new MainListHolder(filmRow, cellWidth, cellHeight);
         filmRow.findViewById(R.id.mainListItemPicture).setOnClickListener(view -> openMovie(view, res.getAdapterPosition()));
+        filmRow.findViewById(R.id.mainListItemPicture).setOnLongClickListener(view -> turnLiked(view, res.getAdapterPosition()));
         return res;
     }
 
@@ -52,6 +53,13 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
         MainListAnimation.press(view);
         viewModel.setIndexForOpen(adapterPosition);
         MainActivity.callFragment(FRAGMENT_DETAIL);
+    }
+
+    private boolean turnLiked(View view, int adapterPosition) {
+        MainListAnimation.press(view);
+        viewModel.turnLiked(adapterPosition);
+        notifyItemChanged(adapterPosition);
+        return true;
     }
 
 }

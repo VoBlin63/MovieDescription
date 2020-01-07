@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorBackgroundField">
+    android:background="@color/colorBackgroundField"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/detailBack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/horizontal_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
+
     <TextView
         android:id="@+id/detailTitle"
+        style="@style/Detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="some text"
-        android:textColor="#FFF"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:paddingHorizontal="@dimen/horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailBack">
 
     </TextView>
+
     <TextView
         android:id="@+id/detailOverview"
+        style="@style/Detail.Overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="some text"
-        android:textColor="#FFF"
-        app:layout_constraintTop_toBottomOf="@id/detailTitle"
-        app:layout_constraintStart_toStartOf="parent">
+        android:paddingHorizontal="@dimen/horizontal_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailTitle">
 
     </TextView>
 
