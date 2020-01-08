@@ -25,7 +25,7 @@
                     android:id="@+id/searchItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    >
+                    android:gravity="right">
 
                 </androidx.appcompat.widget.SearchView>
             </androidx.appcompat.widget.Toolbar>

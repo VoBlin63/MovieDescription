@@ -1,14 +1,10 @@
 package ru.buryachenko.moviedescription.activity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Menu;
-import android.view.WindowManager;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,7 +27,6 @@ import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_FAQ;
-import static ru.buryachenko.moviedescription.Constant.FRAGMENT_LIKED;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.init();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer);
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         SearchView mSearchView = findViewById(R.id.searchItem);
-        mSearchView.setQueryHint("Search");
+        mSearchView.setQueryHint(getString(R.string.searchHint));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -92,7 +88,12 @@ public class MainActivity extends AppCompatActivity {
                 callFragment(FRAGMENT_FAQ);
                 break;
             case R.id.menuLikedList:
-                callFragment(FRAGMENT_LIKED);
+                viewModel.setMode(MoviesViewModel.ModeView.LIKED_LIST);
+                callFragment(FRAGMENT_MAIN_LIST);
+                break;
+            case R.id.menuMainScreen:
+                viewModel.setMode(MoviesViewModel.ModeView.MAIN_LIST);
+                callFragment(FRAGMENT_MAIN_LIST);
                 break;
             case R.id.menuQuit:
                 tryToQuit();
@@ -145,9 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case FRAGMENT_ABOUT:
                 toCall = new AboutFragment();
-                break;
-            case FRAGMENT_LIKED:
-                toCall = new LikedFragment();
                 break;
             default:
                 toCall = null;

@@ -2,6 +2,9 @@ package ru.buryachenko.moviedescription.activity;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -17,6 +20,8 @@ import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.utilities.Config;
 
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
+
 public class ConfigFragment extends Fragment {
     private View layout;
     private Config config = Config.getInstance();
@@ -30,6 +35,7 @@ public class ConfigFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_config, container, false);
     }
 
@@ -81,6 +87,23 @@ public class ConfigFragment extends Fragment {
                     break;
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_config, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuConfigGoMain:
+                MainActivity.callFragment(FRAGMENT_MAIN_LIST);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

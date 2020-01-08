@@ -11,6 +11,10 @@
         android:icon="@drawable/ic_menu_faq"
         android:title="@string/menu_Faq" />
     <item
+        android:id="@+id/menuMainScreen"
+        android:icon="@drawable/ic_main_screen"
+        android:title="@string/menu_mainScreen" />
+    <item
         android:id="@+id/menuLikedList"
         android:icon="@drawable/ic_liked"
         android:title="@string/menu_likedList" />

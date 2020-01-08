@@ -8,6 +8,9 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -30,6 +33,9 @@ import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter
 import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_LIKED;
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
+
 public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private MoviesViewModel viewModel;
@@ -45,6 +51,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_mainlist, container, false);
     }
 
@@ -60,7 +67,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         recyclerView.setLayoutManager(layoutManager);
         adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
         recyclerView.setAdapter(adapter);
-
         swipeRefresher = layout.findViewById(R.id.mainListSwipeRefresh);
         swipeRefresher.setOnRefreshListener(this);
         swipeRefresher.setColorSchemeResources(R.color.colorPrimary,
@@ -71,6 +77,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         viewModel.getListReady().observe(this, status -> {
             AppLog.write("Got list ready: " + status);
             if (status) {
+                getActivity().invalidateOptionsMenu();
                 viewModel.resetList();
                 adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
                 recyclerView.setAdapter(adapter);
@@ -82,6 +89,32 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
             swipeRefresher.setRefreshing(true);
             setUpBusyStatus(updater);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        if (viewModel.getMode() == MoviesViewModel.ModeView.LIKED_LIST) {
+            inflater.inflate(R.menu.menu_liked, menu);
+        } else {
+            inflater.inflate(R.menu.menu_main_list, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuLikedGoMain:
+                viewModel.setMode(MoviesViewModel.ModeView.MAIN_LIST);
+                MainActivity.callFragment(FRAGMENT_MAIN_LIST);
+                break;
+            case R.id.menuMainListGoLiked:
+                viewModel.setMode(MoviesViewModel.ModeView.LIKED_LIST);
+                MainActivity.callFragment(FRAGMENT_LIKED);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

@@ -1,11 +1,16 @@
 package ru.buryachenko.moviedescription.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -23,14 +28,48 @@ import ru.buryachenko.moviedescription.database.MovieRecord;
 import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
+
 public class DetailFragment extends Fragment {
     private MoviesViewModel viewModel;
     private View layout;
+    private MovieRecord movie;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_detail, container, false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_detail, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuDetailShare:
+                //TODO ссылку куда дать ?
+                shareMovie(movie.getTitle(), movie.getOriginalTitle());
+                break;
+            case R.id.menuDetailGoMain:
+                viewModel.setMode(MoviesViewModel.ModeView.MAIN_LIST);
+                MainActivity.callFragment(FRAGMENT_MAIN_LIST);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareMovie(String title, String link) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, link);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent,getString(R.string.shareMoviePrompt) + " " + title));
     }
 
     @Override
@@ -38,8 +77,8 @@ public class DetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
         layout = view;
-        if (viewModel.getIndexForOpen() != -1) {
-            MovieRecord movie = viewModel.getListMovies()[viewModel.getIndexForOpen()];
+        if (viewModel.getIndexForOpenDetail() != -1) {
+            movie = viewModel.getListMovies()[viewModel.getIndexForOpenDetail()];
             ImageView imageBack = layout.findViewById(R.id.detailBack);
             Point size = getScreenSize();
             Glide.with(this)
@@ -59,6 +98,7 @@ public class DetailFragment extends Fragment {
 
             ((TextView) layout.findViewById(R.id.detailTitle)).setText(movie.getTitle());
             ((TextView) layout.findViewById(R.id.detailOverview)).setText(movie.getOverview());
+            ((TextView)layout.findViewById(R.id.detailOverview)).setMovementMethod(new ScrollingMovementMethod());
             viewModel.setIndexForOpen(-1);
         } else {
             ((TextView) layout.findViewById(R.id.detailTitle)).setText("empty");

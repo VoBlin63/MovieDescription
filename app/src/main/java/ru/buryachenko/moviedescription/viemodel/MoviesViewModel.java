@@ -4,7 +4,6 @@ import android.os.Build;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +27,7 @@ import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
 public class MoviesViewModel extends ViewModel {
     private String textFilter = "";
-    private int indexForOpen = -1;
+    private int indexForOpenDetail = -1;
     private Config config = Config.getInstance();
     private SparseArray<MovieRecord> movies = new SparseArray();
     private MutableLiveData<Boolean> listReady = new MutableLiveData<>();
@@ -36,6 +35,20 @@ public class MoviesViewModel extends ViewModel {
     private final int EMPTY_USEFULNESS = 9999;
     private MovieRecord[] moviesOnScreen;
     private PublishSubject<String> filterQueue = PublishSubject.create();
+    private ModeView mode = ModeView.MAIN_LIST;
+
+    public void setMode(ModeView mode) {
+        if (mode != this.mode) {
+            moviesOnScreen = null;
+            this.mode = mode;
+            listReady.postValue(true);
+        }
+    }
+
+    public ModeView getMode() {
+        return mode;
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void init() {
@@ -79,8 +92,30 @@ public class MoviesViewModel extends ViewModel {
 
     public MovieRecord[] getListMovies() {
         if (moviesOnScreen == null)
-            fillMoviesOnScreen();
+            if (mode == ModeView.MAIN_LIST) {
+                fillMoviesOnScreen();
+            } else {
+                fillLikedOnScreen();
+            }
         return moviesOnScreen;
+    }
+
+    private void fillLikedOnScreen() {
+        int count = 0;
+        for (int index = 0; index < movies.size(); index++) {
+            if (movies.valueAt(index).isLiked()) {
+                count = count + 1;
+            }
+        }
+        MovieRecord[] res = new MovieRecord[count];
+        int currentIndex = 0;
+        for (int index = 0; index < movies.size(); index++) {
+            if (movies.valueAt(index).isLiked()) {
+                res[currentIndex++] = movies.valueAt(index);
+            }
+        }
+        Arrays.sort(res, (a, b) -> a.getCompareFlag().compareTo(b.getCompareFlag()));
+        moviesOnScreen = res;
     }
 
     private void fillMoviesOnScreen() {
@@ -131,7 +166,8 @@ public class MoviesViewModel extends ViewModel {
                 .observeOn(Schedulers.io())
                 .subscribe(new Observer<Integer>() {
                     @Override
-                    public void onSubscribe(Disposable d) {}
+                    public void onSubscribe(Disposable d) {
+                    }
 
                     @Override
                     public void onNext(Integer index) {
@@ -140,7 +176,8 @@ public class MoviesViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onError(Throwable e) {}
+                    public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onComplete() {
@@ -219,11 +256,13 @@ public class MoviesViewModel extends ViewModel {
         return listReady;
     }
 
-    public int getIndexForOpen() {
-        return indexForOpen;
+    public int getIndexForOpenDetail() {
+        return indexForOpenDetail;
     }
 
     public void setIndexForOpen(int indexForOpen) {
-        this.indexForOpen = indexForOpen;
+        this.indexForOpenDetail = indexForOpen;
     }
+
+    public enum ModeView {MAIN_LIST, LIKED_LIST}
 }

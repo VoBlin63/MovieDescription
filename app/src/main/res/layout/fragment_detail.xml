@@ -33,10 +33,13 @@
         android:id="@+id/detailOverview"
         style="@style/Detail.Overview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="118sp"
         android:paddingHorizontal="@dimen/horizontal_margin"
-        app:layout_constraintStart_toStartOf="parent"
+        android:scrollbarSize="@dimen/horizontal_margin"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detailTitle">
 
     </TextView>
