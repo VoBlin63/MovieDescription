@@ -1,12 +1,20 @@
 package ru.buryachenko.moviedescription.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
+import android.view.View;
+import android.view.WindowManager;
 
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -33,6 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager fragmentManager;
     private MoviesViewModel viewModel;
+    private Toolbar toolbar;
+    private SearchView search;
+
+    private static Map<String, Fragment> fragments = new HashMap<>();
+
+    static {
+        fragments.put(FRAGMENT_ABOUT, new AboutFragment());
+        fragments.put(FRAGMENT_CONFIG, new ConfigFragment());
+        fragments.put(FRAGMENT_MAIN_LIST, new MainListFragment());
+        fragments.put(FRAGMENT_DETAIL, new DetailFragment());
+        fragments.put(FRAGMENT_FAQ, new FaqFragment());
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -44,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         viewModel.init();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer);
@@ -53,18 +73,33 @@ public class MainActivity extends AppCompatActivity {
                 this, drawer, toolbar,
                 R.string.drawerOpen, R.string.drawerClose);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> clickDrawerMenu(item.getItemId()));
 
         callFragment(FRAGMENT_MAIN_LIST);
     }
 
+    public void hideSearchField() {
+        search.setVisibility(View.GONE);
+    }
+
+    public void showSearchField() {
+        search.setVisibility(View.VISIBLE);
+    }
+
+    public Point getScreenSize() {
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        SearchView mSearchView = findViewById(R.id.searchItem);
-        mSearchView.setQueryHint(getString(R.string.searchHint));
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        search = findViewById(R.id.searchItem);
+        search.setQueryHint(getString(R.string.searchHint));
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -121,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void callFragment(String screenTag) {
+    public void callFragment(String screenTag) {
+        setTitle(viewModel.getFragmentTitle(screenTag));
         Fragment toCall = fragmentManager.findFragmentByTag(screenTag);
         if (toCall != null) {
             fragmentManager
@@ -129,34 +165,16 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.fragmentContainer, toCall, screenTag)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
-            return;
-        }
-        switch (screenTag) {
-            case FRAGMENT_CONFIG:
-                toCall = new ConfigFragment();
-                break;
-            case FRAGMENT_MAIN_LIST:
-                toCall = new MainListFragment();
-                break;
-            case FRAGMENT_DETAIL:
-                toCall = new DetailFragment();
-                break;
-            case FRAGMENT_FAQ:
-                toCall = new FaqFragment();
-                break;
-            case FRAGMENT_ABOUT:
-                toCall = new AboutFragment();
-                break;
-            default:
-                toCall = null;
-        }
-        if (toCall != null) {
-            fragmentManager
-                    .beginTransaction()
-                    .add(R.id.fragmentContainer, toCall, screenTag)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack(null)
-                    .commit();
+        } else {
+            toCall = fragments.get(screenTag);
+            if (toCall != null) {
+                fragmentManager
+                        .beginTransaction()
+                        .add(R.id.fragmentContainer, toCall, screenTag)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
 
@@ -175,5 +193,9 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
         dialog.show();
+    }
+
+    public void setTitle(String title) {
+        toolbar.setTitle(title);
     }
 }

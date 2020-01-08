@@ -1,19 +1,16 @@
 package ru.buryachenko.moviedescription.activity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import java.util.UUID;
 
@@ -65,8 +62,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         setSpanCountsAndSizes();
         final GridLayoutManager layoutManager = new GridLayoutManager(layout.getContext(), spanCountWidth);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
-        recyclerView.setAdapter(adapter);
         swipeRefresher = layout.findViewById(R.id.mainListSwipeRefresh);
         swipeRefresher.setOnRefreshListener(this);
         swipeRefresher.setColorSchemeResources(R.color.colorPrimary,
@@ -79,7 +74,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
             if (status) {
                 getActivity().invalidateOptionsMenu();
                 viewModel.resetList();
-                adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight);
+                adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight, (MainActivity) getActivity());
                 recyclerView.setAdapter(adapter);
             }
         });
@@ -95,9 +90,12 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+        ((MainActivity) getActivity()).showSearchField();
         if (viewModel.getMode() == MoviesViewModel.ModeView.LIKED_LIST) {
+            ((MainActivity) getActivity()).setTitle(getString(R.string.menu_likedList));
             inflater.inflate(R.menu.menu_liked, menu);
         } else {
+            ((MainActivity) getActivity()).setTitle(getString(R.string.menu_mainScreen));
             inflater.inflate(R.menu.menu_main_list, menu);
         }
     }
@@ -107,11 +105,11 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         switch (item.getItemId()) {
             case R.id.menuLikedGoMain:
                 viewModel.setMode(MoviesViewModel.ModeView.MAIN_LIST);
-                MainActivity.callFragment(FRAGMENT_MAIN_LIST);
+                ((MainActivity) getActivity()).callFragment(FRAGMENT_MAIN_LIST);
                 break;
             case R.id.menuMainListGoLiked:
                 viewModel.setMode(MoviesViewModel.ModeView.LIKED_LIST);
-                MainActivity.callFragment(FRAGMENT_LIKED);
+                ((MainActivity) getActivity()).callFragment(FRAGMENT_LIKED);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -155,14 +153,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         dialog.show();
     }
 
-    private Point getScreenSize() {
-        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
-    }
-
     private void setSpanCountsAndSizes() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             spanCountWidth = 3;
@@ -177,7 +167,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         int shiftY = Math.round(
                 (getResources().getDimension(R.dimen.horizontal_margin) * 2 + getResources().getDimension(R.dimen.cell_border_space) * 2 * spanCountHeight)
         );
-        Point size = getScreenSize();
+        Point size = ((MainActivity) getActivity()).getScreenSize();
         cellWidth = (size.x - shiftX) / spanCountWidth;
         cellHeight = (size.y - shiftY) / spanCountHeight;
     }

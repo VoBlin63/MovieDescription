@@ -7,5 +7,5 @@
         android:id="@+id/menuMainListGoLiked"
         android:icon="@drawable/ic_liked"
         app:showAsAction="always"
-        android:title="@string/menuGoMainPrompt" />
+        android:title="@string/menuGoLikedPrompt" />
 </menu>

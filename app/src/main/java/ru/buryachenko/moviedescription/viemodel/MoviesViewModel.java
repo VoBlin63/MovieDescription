@@ -264,5 +264,9 @@ public class MoviesViewModel extends ViewModel {
         this.indexForOpenDetail = indexForOpen;
     }
 
+    public String getFragmentTitle(String tag) {
+        return "!" + tag;
+    }
+
     public enum ModeView {MAIN_LIST, LIKED_LIST}
 }

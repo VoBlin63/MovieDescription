@@ -93,6 +93,8 @@ public class ConfigFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+        ((MainActivity) getActivity()).hideSearchField();
+        ((MainActivity) getActivity()).setTitle(getString(R.string.menu_config));
         inflater.inflate(R.menu.menu_config, menu);
     }
 
@@ -100,7 +102,7 @@ public class ConfigFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuConfigGoMain:
-                MainActivity.callFragment(FRAGMENT_MAIN_LIST);
+                ((MainActivity) getActivity()).callFragment(FRAGMENT_MAIN_LIST);
                 break;
         }
         return super.onOptionsItemSelected(item);

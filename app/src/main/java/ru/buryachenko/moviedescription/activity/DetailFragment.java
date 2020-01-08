@@ -1,19 +1,16 @@
 package ru.buryachenko.moviedescription.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +43,8 @@ public class DetailFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+        ((MainActivity) getActivity()).hideSearchField();
+        ((MainActivity) getActivity()).setTitle(getString(R.string.titleFragmentDetail));
         inflater.inflate(R.menu.menu_detail, menu);
     }
 
@@ -58,7 +57,7 @@ public class DetailFragment extends Fragment {
                 break;
             case R.id.menuDetailGoMain:
                 viewModel.setMode(MoviesViewModel.ModeView.MAIN_LIST);
-                MainActivity.callFragment(FRAGMENT_MAIN_LIST);
+                ((MainActivity) getActivity()).callFragment(FRAGMENT_MAIN_LIST);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -69,7 +68,7 @@ public class DetailFragment extends Fragment {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, link);
         sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent,getString(R.string.shareMoviePrompt) + " " + title));
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.shareMoviePrompt) + " " + title));
     }
 
     @Override
@@ -80,7 +79,7 @@ public class DetailFragment extends Fragment {
         if (viewModel.getIndexForOpenDetail() != -1) {
             movie = viewModel.getListMovies()[viewModel.getIndexForOpenDetail()];
             ImageView imageBack = layout.findViewById(R.id.detailBack);
-            Point size = getScreenSize();
+            Point size = ((MainActivity) getActivity()).getScreenSize();
             Glide.with(this)
                     .load(movie.getBackdropPath())
                     .fitCenter()
@@ -98,20 +97,11 @@ public class DetailFragment extends Fragment {
 
             ((TextView) layout.findViewById(R.id.detailTitle)).setText(movie.getTitle());
             ((TextView) layout.findViewById(R.id.detailOverview)).setText(movie.getOverview());
-            ((TextView)layout.findViewById(R.id.detailOverview)).setMovementMethod(new ScrollingMovementMethod());
+            ((TextView) layout.findViewById(R.id.detailOverview)).setMovementMethod(new ScrollingMovementMethod());
             viewModel.setIndexForOpen(-1);
         } else {
             ((TextView) layout.findViewById(R.id.detailTitle)).setText("empty");
             AppLog.write("No movie for open");
         }
-    }
-
-    private Point getScreenSize() {
-        //TODO дублирует - как бы их в одно место
-        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
     }
 }

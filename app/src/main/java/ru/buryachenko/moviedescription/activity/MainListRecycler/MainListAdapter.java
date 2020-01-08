@@ -20,12 +20,14 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
     private MoviesViewModel viewModel;
     private int cellWidth;
     private int cellHeight;
+    private MainActivity activity;
 
-    public MainListAdapter(LayoutInflater inflater, MoviesViewModel viewModel, int cellWidth, int cellHeight) {
+    public MainListAdapter(LayoutInflater inflater, MoviesViewModel viewModel, int cellWidth, int cellHeight, MainActivity activity) {
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.viewModel = viewModel;
         this.moviesList = viewModel.getListMovies();
+        this.activity = activity;
     }
 
     @NonNull
@@ -52,7 +54,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
     private void openMovie(View view, int adapterPosition) {
         MainListAnimation.press(view);
         viewModel.setIndexForOpen(adapterPosition);
-        MainActivity.callFragment(FRAGMENT_DETAIL);
+        activity.callFragment(FRAGMENT_DETAIL);
     }
 
     private boolean turnLiked(View view, int adapterPosition) {
