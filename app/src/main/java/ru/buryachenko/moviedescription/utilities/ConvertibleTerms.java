@@ -14,8 +14,8 @@ public class ConvertibleTerms {
     }
 
     private static void putTerm(String word, String top) {
-        String value = Metaphone.metaphone(word.toUpperCase());
-        String topVal = Metaphone.metaphone(top.toUpperCase());
+        String value = Metaphone.code(word.toUpperCase());
+        String topVal = Metaphone.code(top.toUpperCase());
         if (value.isEmpty() || topVal.isEmpty() || lexicon.containsKey(topVal)) {
             return;
         }

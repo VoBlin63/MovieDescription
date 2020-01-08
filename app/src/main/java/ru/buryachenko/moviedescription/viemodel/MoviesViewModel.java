@@ -208,11 +208,11 @@ public class MoviesViewModel extends ViewModel {
         Observable.fromIterable(wordsList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-//                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
-                .map(Metaphone::metaphone)
-//                .map(w1 -> {AppLog.write(" код metaphone: " + w1); return w1;})
+                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
+                .map(Metaphone::code)
+                .map(w1 -> {AppLog.write(" код code: " + w1); return w1;})
                 .map(ConvertibleTerms::topWord)
-//                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
+                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
                 .map(code -> App.getInstance().movieDatabase.tagDao().getSyncMovieIdsByTags(code, !config.isUseOverview()))
                 .subscribe(new Observer<List<Integer>>() {
                     @Override

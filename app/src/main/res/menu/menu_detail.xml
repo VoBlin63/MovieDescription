@@ -11,6 +11,6 @@
     <item
         android:id="@+id/menuDetailGoMain"
         android:icon="@drawable/ic_main_screen"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/menuGoMainPrompt" />
 </menu>

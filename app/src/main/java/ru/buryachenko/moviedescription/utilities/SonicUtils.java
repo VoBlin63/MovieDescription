@@ -14,17 +14,17 @@ public class SonicUtils {
     public static List<TagRecord> makeCodes(MovieRecord movie) {
         Set<TagRecord> res = new HashSet<>();
         for (String word : getWordsList(movie.getTitle())) {
-            res.add(new TagRecord(movie.getId(), ConvertibleTerms.topWord(Metaphone.metaphone(word)), true));
+            res.add(new TagRecord(movie.getId(), ConvertibleTerms.topWord(Metaphone.code(word)), true));
         }
         for (String word : getWordsList(movie.getOverview())) {
-            res.add(new TagRecord(movie.getId(), ConvertibleTerms.topWord(Metaphone.metaphone(word)), false));
+            res.add(new TagRecord(movie.getId(), ConvertibleTerms.topWord(Metaphone.code(word)), false));
         }
         return new ArrayList<>(res);
     }
 
     public static List<String> getWordsList(String text) {
         LinkedList<String> res = new LinkedList<>();
-        for (String word : text.toUpperCase().replace("Ё","Е").split("[^A-ZА-Я]+")) {
+        for (String word : text.toUpperCase().replace("Ё","Е").split("[^A-ZА-Я0-9]+")) {
             if (word.length() >= 3) {
                 res.add(word);
             }

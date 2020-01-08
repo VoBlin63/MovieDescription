@@ -28,4 +28,5 @@
     <string name="menuGoMainPrompt">На основной экран</string>
     <string name="menuGoLikedPrompt">Избранное</string>
     <string name="titleFragmentDetail">Подробности</string>
+    <string name="titleFragmentLiked">Избранное</string>
 </resources>

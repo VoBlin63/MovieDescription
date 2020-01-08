@@ -92,7 +92,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         menu.clear();
         ((MainActivity) getActivity()).showSearchField();
         if (viewModel.getMode() == MoviesViewModel.ModeView.LIKED_LIST) {
-            ((MainActivity) getActivity()).setTitle(getString(R.string.menu_likedList));
+            ((MainActivity) getActivity()).setTitle(getString(R.string.titleFragmentLiked));
             inflater.inflate(R.menu.menu_liked, menu);
         } else {
             ((MainActivity) getActivity()).setTitle(getString(R.string.menu_mainScreen));

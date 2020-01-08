@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.R;
+import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.Metaphone;
+import ru.buryachenko.moviedescription.utilities.SonicUtils;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;

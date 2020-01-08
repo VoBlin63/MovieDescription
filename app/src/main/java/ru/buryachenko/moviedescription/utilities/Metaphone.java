@@ -1,45 +1,13 @@
 package ru.buryachenko.moviedescription.utilities;
 
 public class Metaphone {
-    /**
-     * Five values in the English language
-     */
-    private static String vowels = "AEIOU";
-    /**
-     * Variable used in Metaphone algorithm
-     */
-    private static String frontv = "EIY";
-    /**
-     * Variable used in Metaphone algorithm
-     */
-    private static String varson = "CSPTG";
-    /**
-     * The max code length for metaphone is 4
-     */
-    private static int maxCodeLen = 4;
-    /**
-     * Creates an instance of the Metaphone encoder
-     */
-    /**
-     * Find the metaphone value of a String. This is similar to the
-     * soundex algorithm, but better at finding similar sounding words.
-     * All input is converted to upper case.
-     * Limitations: Input format is expected to be a single ASCII word
-     * with only characters in the A - Z range, no punctuation or numbers.
-     *
-     * @param txt String to find the metaphone code for
-     * @return A metaphone code corresponding to the String supplied
-     */
-//    public static String metaphone(String txt) {
-//        return txt.toUpperCase();
-//    }
 
-    public static String metaphone(String txt) {
-        boolean hard = false;
+    public static String code(String txt) {
+        boolean hard;
         if ((txt == null) || (txt.length() == 0)) {
             return "";
         }
-        txt = cyr2lat(txt); //txt = cyr2lat(txt.toUpperCase());
+        txt = cyr2lat(txt);
         // single character is itself
         if (txt.length() == 1) {
             return txt.toUpperCase();
@@ -48,7 +16,7 @@ public class Metaphone {
         char[] inwd = txt.toUpperCase().toCharArray();
 
         StringBuffer local = new StringBuffer(40); // manipulate
-        StringBuffer code = new StringBuffer(10); //   output
+        StringBuilder code = new StringBuilder(10); //   output
         // handle initial 2 characters exceptions
         switch (inwd[0]) {
             case 'K':
@@ -95,7 +63,21 @@ public class Metaphone {
             if ((symb != 'C') && (isPreviousChar(local, n, symb))) {
                 n++;
             } else { // not dup
+                String varson = "CSPTG";
+                String frontv = "EIY";
                 switch (symb) {
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        code.append(symb);
+                        break;
                     case 'A':
                     case 'E':
                     case 'I':
@@ -170,11 +152,7 @@ public class Metaphone {
                                         regionMatch(local, n, "GNED"))) {
                             break; // silent G
                         }
-                        if (isPreviousChar(local, n, 'G')) {
-                            hard = true;
-                        } else {
-                            hard = false;
-                        }
+                        hard = isPreviousChar(local, n, 'G');
                         if (!isLastChar(wdsz, n) &&
                                 (frontv.indexOf(local.charAt(n + 1)) >= 0) &&
                                 (!hard)) {
@@ -277,6 +255,7 @@ public class Metaphone {
     }
 
     private static boolean isVowel(StringBuffer string, int index) {
+        String vowels = "AEIOU";
         return (vowels.indexOf(string.charAt(index)) >= 0);
     }
 
@@ -312,28 +291,8 @@ public class Metaphone {
         return n + 1 == wdsz;
     }
 
-
-    public static boolean isMetaphoneEqual(String str1, String str2) {
-        return metaphone(str1).equals(metaphone(str2));
-    }
-
-    /**
-     * Returns the maxCodeLen.
-     *
-     * @return int
-     */
-    public static int getMaxCodeLen() {
-        return maxCodeLen;
-    }
-
-    /**
-     * Sets the maxCodeLen.
-     *
-     * @param maxCodeLen The maxCodeLen to set
-     */
-
-    public static void setMaxCodeLen(int maxCodeLen) {
-        maxCodeLen = maxCodeLen;
+    private static int getMaxCodeLen() {
+        return 5;
     }
 
     private static String cyr2lat(char ch) {
