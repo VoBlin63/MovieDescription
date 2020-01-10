@@ -138,6 +138,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         DialogInterface.OnClickListener listener =
                 (dialog, which) -> {
                     if (which == Dialog.BUTTON_POSITIVE) {
+                        viewModel.pushLiked(false);
                         UUID updater = App.getInstance().setUpUpdateDatabase(true);
                         setUpBusyStatus(updater);
                     } else {

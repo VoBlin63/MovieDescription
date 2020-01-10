@@ -1,6 +1,7 @@
 package ru.buryachenko.moviedescription.database;
 
 import java.util.List;
+import java.util.Set;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -13,6 +14,9 @@ public interface MovieDao {
 
     @Query("SELECT * FROM movierecord")
     Observable<List<MovieRecord>> getAll();
+
+    @Query("SELECT id FROM movierecord WHERE liked")
+    List<Integer> getLikedList();
 
     @Query("UPDATE movierecord SET liked = :liked WHERE id in (:movieIds)")
     void setLikedList(List<Integer> movieIds, boolean liked);

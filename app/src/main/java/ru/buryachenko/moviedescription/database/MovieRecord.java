@@ -5,12 +5,16 @@ import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import ru.buryachenko.moviedescription.api.MovieJson;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+
+import static ru.buryachenko.moviedescription.Constant.TMDB_PICTURE_PREFIX;
 
 @Entity
 public class MovieRecord {
@@ -32,11 +36,11 @@ public class MovieRecord {
     @Ignore
     private int usefulness;
 
-    public MovieRecord(MovieJson filmJson) {
+    public MovieRecord(MovieJson filmJson, Set<Integer> likedList) {
         title = filmJson.getTitle();
         overview = filmJson.getOverview();
         id = filmJson.getId();
-        posterPath = "https://image.tmdb.org/t/p/w500/" + filmJson.getPosterPath();
+        posterPath = TMDB_PICTURE_PREFIX + filmJson.getPosterPath();
         popularity = filmJson.getPopularity();
         voteCount = filmJson.getVoteCount();
         adult = filmJson.getAdult();
@@ -44,8 +48,8 @@ public class MovieRecord {
         originalTitle = filmJson.getOriginalTitle();
         voteAverage = filmJson.getVoteAverage();
         releaseDate = filmJson.getReleaseDate();
-        liked = false;
-        backdropPath = "https://image.tmdb.org/t/p/w500/" + filmJson.getBackdropPath();
+        liked = likedList.contains(id);
+        backdropPath = TMDB_PICTURE_PREFIX + filmJson.getBackdropPath();
     }
 
     public MovieRecord() {
@@ -172,4 +176,24 @@ public class MovieRecord {
     public void turnLiked() {
         liked = !liked;
     }
+
+    public String getReleaseDateTransformed() {
+        SimpleDateFormat tmdbFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date tmp;
+        try {
+            tmp = tmdbFormat.parse(releaseDate);
+        } catch (ParseException e) {
+            return releaseDate;
+        }
+        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy");
+        if (tmp == null) {
+            return releaseDate;
+        }
+        return targetFormat.format(tmp);
+    }
+
+    public String getPopularityTransformed() {
+        return String.format("%.1f", popularity);
+    }
+
 }

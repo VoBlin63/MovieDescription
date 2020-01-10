@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,28 +75,48 @@ public class DetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
         layout = view;
+
+//+        private Integer id;
+//+        private Double popularity;
+//-        private Integer voteCount;
+//-        private String posterPath;
+//        private Boolean adult;
+//        private String originalLanguage;
+//        private String originalTitle;
+//+        private String title;
+//-        private Float voteAverage;
+//+        private String overview;
+//+        private String getReleaseDateTransformed;
+//+        private String backdropPath;
+//        private boolean liked;
+
+
         if (viewModel.getIndexForOpenDetail() != -1) {
             movie = viewModel.getListMovies()[viewModel.getIndexForOpenDetail()];
-            ImageView imageBack = layout.findViewById(R.id.detailBack);
+            ImageView imageBackdrop = layout.findViewById(R.id.detailBackdrop);
             Point size = ((MainActivity) getActivity()).getScreenSize();
             Glide.with(this)
                     .load(movie.getBackdropPath())
                     .fitCenter()
                     .placeholder(R.drawable.ic_loading_poster)
                     .error(R.drawable.ic_poster_blank)
-                    .into(imageBack);
-            ViewGroup.LayoutParams params = imageBack.getLayoutParams();
+                    .into(imageBackdrop);
+            ViewGroup.LayoutParams params = imageBackdrop.getLayoutParams();
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 params.width = Math.round(size.x - getResources().getDimension(R.dimen.horizontal_margin) * 2);
             } else {
                 params.width = size.x / 2;
             }
             params.height = 9 * params.width / 16;
-            imageBack.setLayoutParams(params);
+            imageBackdrop.setLayoutParams(params);
 
             ((TextView) layout.findViewById(R.id.detailTitle)).setText(movie.getTitle());
             ((TextView) layout.findViewById(R.id.detailOverview)).setText(movie.getOverview());
-            ((TextView) layout.findViewById(R.id.detailOverview)).setMovementMethod(new ScrollingMovementMethod());
+//            ((TextView) layout.findViewById(R.id.detailOverview)).setMovementMethod(new ScrollingMovementMethod());
+
+            ((TextView) layout.findViewById(R.id.detailPopularity)).setText(movie.getPopularityTransformed());
+            ((TextView) layout.findViewById(R.id.detailReleaseDate)).setText(movie.getReleaseDateTransformed());
+
             viewModel.setIndexForOpen(-1);
         } else {
             ((TextView) layout.findViewById(R.id.detailTitle)).setText("empty");

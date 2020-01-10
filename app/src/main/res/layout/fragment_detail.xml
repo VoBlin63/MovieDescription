@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundField"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/detailBack"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/horizontal_margin"
+        android:id="@+id/detailBackdrop"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginHorizontal="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/horizontal_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,25 +25,106 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/horizontal_margin"
+        android:paddingVertical="@dimen/vertical_half_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detailBack">
+        app:layout_constraintTop_toBottomOf="@id/detailBackdrop">
 
     </TextView>
 
-    <TextView
-        android:id="@+id/detailOverview"
-        style="@style/Detail.Overview"
-        android:layout_width="wrap_content"
-        android:layout_height="118sp"
-        android:paddingHorizontal="@dimen/horizontal_margin"
-        android:scrollbarSize="@dimen/horizontal_margin"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <FrameLayout
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="@dimen/horizontal_margin"
+        android:background="@color/colorSeparator"
+        android:paddingTop="@dimen/vertical_half_margin"
         app:layout_constraintTop_toBottomOf="@id/detailTitle">
 
-    </TextView>
+    </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/detailPopularityPrompt"
+            style="@style/Detail.Overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/vertical_half_margin"
+            android:paddingStart="@dimen/horizontal_margin"
+            android:paddingEnd="@dimen/vertical_half_margin"
+            android:text="популярность"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/detailPopularity"
+            style="@style/Detail.Overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintStart_toEndOf="@id/detailPopularityPrompt"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/detailReleaseDate"
+            style="@style/Detail.Overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/vertical_half_margin"
+            android:paddingStart="@dimen/vertical_half_margin"
+            android:paddingEnd="@dimen/horizontal_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/detailReleasePrompt"
+            style="@style/Detail.Overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/vertical_half_margin"
+            android:text="релиз"
+            app:layout_constraintEnd_toStartOf="@id/detailReleaseDate"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="@dimen/horizontal_margin"
+        android:background="@color/colorSeparator"
+        android:paddingTop="@dimen/vertical_half_margin"
+        app:layout_constraintTop_toBottomOf="@id/detailPopularityPrompt">
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider2">
+
+        <TextView
+            android:id="@+id/detailOverview"
+            style="@style/Detail.Overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/horizontal_margin">
+
+        </TextView>
+    </ScrollView>
+
+</LinearLayout>

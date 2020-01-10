@@ -3,6 +3,7 @@ package ru.buryachenko.moviedescription.api;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.database.MovieRecord;
@@ -20,11 +21,11 @@ public class MovieLoader {
         return res;
     }
 
-    public static List<MovieRecord> getMoviesFromPage(PageMoviesJson page) {
+    public static List<MovieRecord> getMoviesFromPage(PageMoviesJson page, Set<Integer> likedList) {
         List<MovieRecord> res = new ArrayList<>();
         if (page != null) {
             for (MovieJson filmJson : page.getResults()) {
-                res.add(new MovieRecord(filmJson));
+                res.add(new MovieRecord(filmJson, likedList));
             }
         }
         return res;

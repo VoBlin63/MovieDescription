@@ -4,6 +4,8 @@ package ru.buryachenko.moviedescription.database;
 import android.content.Context;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -47,6 +49,7 @@ public class UpdateDatabase extends Worker {
     private void saveMoviesInDatabase(String apiKey, String language, String region) {
         int res = 0;
         PageMoviesJson data;
+        Set<Integer> likedList = new HashSet<>(App.getInstance().movieDatabase.movieDao().getLikedList());
         do {
             AppLog.write("Page #" + page + " :");
             data = MovieLoader.getPage(apiKey, page.get(), language, region);
@@ -55,7 +58,7 @@ public class UpdateDatabase extends Worker {
                 break;
             }
             AppLog.write("It was got " + page);
-            for (MovieRecord record : MovieLoader.getMoviesFromPage(data)) {
+            for (MovieRecord record : MovieLoader.getMoviesFromPage(data, likedList)) {
                 saveRecord(record);
                 res++;
             }
