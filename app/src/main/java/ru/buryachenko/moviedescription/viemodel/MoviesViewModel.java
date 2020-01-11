@@ -29,8 +29,9 @@ public class MoviesViewModel extends ViewModel {
     private String textFilter = "";
     private int indexForOpenDetail = -1;
     private Config config = Config.getInstance();
-    private SparseArray<MovieRecord> movies = new SparseArray();
+    private SparseArray<MovieRecord> movies = new SparseArray<>();
     private MutableLiveData<Boolean> listReady = new MutableLiveData<>();
+    private MutableLiveData<Integer> changedItem = new MutableLiveData<>();
     private SparseBooleanArray cacheLiked = new SparseBooleanArray();
     private final int EMPTY_USEFULNESS = 9999;
     private MovieRecord[] moviesOnScreen;
@@ -159,6 +160,11 @@ public class MoviesViewModel extends ViewModel {
         MovieRecord movie = moviesOnScreen[adapterPosition];
         movie.turnLiked();
         cacheLiked.put(movie.getId(), movie.isLiked());
+        changedItem.postValue(adapterPosition);
+    }
+
+    public LiveData<Integer> getChangedItem() {
+        return changedItem;
     }
 
     public void pushLiked(boolean exitOnFinish) {
@@ -262,10 +268,6 @@ public class MoviesViewModel extends ViewModel {
 
     public void setIndexForOpen(int indexForOpen) {
         this.indexForOpenDetail = indexForOpen;
-    }
-
-    public String getFragmentTitle(String tag) {
-        return "!" + tag;
     }
 
     public enum ModeView {MAIN_LIST, LIKED_LIST}

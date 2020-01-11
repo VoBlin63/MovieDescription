@@ -102,6 +102,7 @@ public class ConfigFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuConfigGoMain:
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 ((MainActivity) getActivity()).callFragment(FRAGMENT_MAIN_LIST);
                 break;
         }

@@ -13,7 +13,6 @@ import android.view.WindowManager;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,14 +30,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.utilities.AppLog;
-import ru.buryachenko.moviedescription.utilities.Metaphone;
-import ru.buryachenko.moviedescription.utilities.SonicUtils;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_FAQ;
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_LIKED;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 
 public class MainActivity extends AppCompatActivity {
@@ -121,7 +119,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean clickDrawerMenu(int idMenuItem) {
         switch (idMenuItem) {
             case R.id.menuAboutApp:
-                callFragment(FRAGMENT_ABOUT);
+                //callFragment(FRAGMENT_ABOUT);
+                AppLog.write("Фрагментов " + fragmentManager.getBackStackEntryCount());
+                for (Fragment fr : fragmentManager.getFragments()) {
+                    AppLog.write(" -> " + fr.getTag());
+                }
                 break;
             case R.id.menuFaq:
                 callFragment(FRAGMENT_FAQ);
@@ -161,16 +163,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void callFragment(String screenTag) {
-        setTitle(viewModel.getFragmentTitle(screenTag));
         Fragment toCall = fragmentManager.findFragmentByTag(screenTag);
+        AppLog.write("toCall = " + toCall);
         if (toCall != null) {
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragmentContainer, toCall, screenTag)
+                    .remove(toCall)
+                    .add(R.id.fragmentContainer, toCall, screenTag)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
         } else {
             toCall = fragments.get(screenTag);
+            AppLog.write("toCall2 = " + toCall);
+
             if (toCall != null) {
                 fragmentManager
                         .beginTransaction()

@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.database.MovieRecord;
-import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
@@ -56,6 +55,7 @@ public class DetailFragment extends Fragment {
                 break;
             case R.id.menuDetailGoMain:
                 viewModel.setMode(MoviesViewModel.ModeView.MAIN_LIST);
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 ((MainActivity) getActivity()).callFragment(FRAGMENT_MAIN_LIST);
                 break;
         }
@@ -75,24 +75,9 @@ public class DetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
         layout = view;
-
-//+        private Integer id;
-//+        private Double popularity;
-//-        private Integer voteCount;
-//-        private String posterPath;
-//        private Boolean adult;
-//        private String originalLanguage;
-//        private String originalTitle;
-//+        private String title;
-//-        private Float voteAverage;
-//+        private String overview;
-//+        private String getReleaseDateTransformed;
-//+        private String backdropPath;
-//        private boolean liked;
-
-
         if (viewModel.getIndexForOpenDetail() != -1) {
-            movie = viewModel.getListMovies()[viewModel.getIndexForOpenDetail()];
+            int indexMovie = viewModel.getIndexForOpenDetail();
+            movie = viewModel.getListMovies()[indexMovie];
             ImageView imageBackdrop = layout.findViewById(R.id.detailBackdrop);
             Point size = ((MainActivity) getActivity()).getScreenSize();
             Glide.with(this)
@@ -109,18 +94,19 @@ public class DetailFragment extends Fragment {
             }
             params.height = 9 * params.width / 16;
             imageBackdrop.setLayoutParams(params);
+            ImageView imageLiked = layout.findViewById(R.id.detailLiked);
+            imageLiked.setVisibility(movie.isLiked()? View.VISIBLE : View.GONE);
+
+            imageBackdrop.setOnClickListener(item -> {viewModel.turnLiked(indexMovie);
+                imageLiked.setVisibility(movie.isLiked()? View.VISIBLE : View.GONE);});
 
             ((TextView) layout.findViewById(R.id.detailTitle)).setText(movie.getTitle());
             ((TextView) layout.findViewById(R.id.detailOverview)).setText(movie.getOverview());
-//            ((TextView) layout.findViewById(R.id.detailOverview)).setMovementMethod(new ScrollingMovementMethod());
 
             ((TextView) layout.findViewById(R.id.detailPopularity)).setText(movie.getPopularityTransformed());
             ((TextView) layout.findViewById(R.id.detailReleaseDate)).setText(movie.getReleaseDateTransformed());
 
-            viewModel.setIndexForOpen(-1);
-        } else {
-            ((TextView) layout.findViewById(R.id.detailTitle)).setText("empty");
-            AppLog.write("No movie for open");
+//            viewModel.setIndexForOpen(-1);
         }
     }
 }

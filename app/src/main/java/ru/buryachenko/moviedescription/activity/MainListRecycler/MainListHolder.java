@@ -1,6 +1,5 @@
 package ru.buryachenko.moviedescription.activity.MainListRecycler;
 
-import android.graphics.Point;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -9,17 +8,16 @@ import com.bumptech.glide.Glide;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.database.MovieRecord;
 
-public class MainListHolder extends RecyclerView.ViewHolder {
+class MainListHolder extends RecyclerView.ViewHolder {
 
     private View layout;
     private ImageView picture;
     private ImageView liked;
 
-    public MainListHolder(@NonNull View itemView, int cellWidth, int cellHeight) {
+    MainListHolder(@NonNull View itemView, int cellWidth, int cellHeight) {
         super(itemView);
         layout = itemView;
         picture = itemView.findViewById(R.id.mainListItemPicture);
@@ -40,9 +38,10 @@ public class MainListHolder extends RecyclerView.ViewHolder {
                 .load(movie.getPosterPath())
                 .fitCenter()
                 .placeholder(R.drawable.ic_loading_poster)
-                .error(R.drawable.ic_poster_blank)
+//                .error(R.drawable.ic_poster_blank)
+                .error(new StringInDrawable(movie.getTitle()))
                 .into(picture);
-        liked.setVisibility(movie.isLiked()? View.VISIBLE : View.INVISIBLE);
+        liked.setVisibility(movie.isLiked() ? View.VISIBLE : View.INVISIBLE);
     }
 
 }

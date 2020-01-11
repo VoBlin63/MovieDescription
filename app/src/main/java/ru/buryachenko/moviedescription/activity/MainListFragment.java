@@ -40,7 +40,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresher;
     private int spanCountWidth;
-    private int spanCountHeight;
     private int cellWidth;
     private int cellHeight;
     private MainListAdapter adapter;
@@ -68,7 +67,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
-
+        viewModel.getChangedItem().observe(this, index-> adapter.notifyItemChanged(index));
         viewModel.getListReady().observe(this, status -> {
             AppLog.write("Got list ready: " + status);
             if (status) {
@@ -155,6 +154,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     private void setSpanCountsAndSizes() {
+        int spanCountHeight;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             spanCountWidth = 3;
             spanCountHeight = 4;
