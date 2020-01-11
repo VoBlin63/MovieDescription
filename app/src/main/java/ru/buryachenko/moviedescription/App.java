@@ -1,6 +1,9 @@
 package ru.buryachenko.moviedescription;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 
 import java.util.Date;
 import java.util.UUID;
@@ -9,9 +12,9 @@ import androidx.room.Room;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import okhttp3.Request;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.buryachenko.moviedescription.api.TmdbApiService;
 import ru.buryachenko.moviedescription.database.MovieDatabase;
@@ -19,11 +22,11 @@ import ru.buryachenko.moviedescription.database.UpdateDatabase;
 import ru.buryachenko.moviedescription.utilities.SharedPreferencesOperation;
 
 import static ru.buryachenko.moviedescription.Constant.KEY_NEXT_TIME_TO_UPDATE;
+import static ru.buryachenko.moviedescription.Constant.NOTIFICATION_CHANNEL_ID;
 import static ru.buryachenko.moviedescription.Constant.UPDATE_DATABASE_WORK_TAG;
 
 public class App extends Application {
     public TmdbApiService serviceHttp;
-//    public GeoApiContext geoApiContext;
     public MovieDatabase movieDatabase;
 
     private static App instance;
@@ -31,13 +34,13 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        initNotificationChannel();
+        initNotificationChannel();
         initRetrofit();
-//        initGeoApi();
         initFilmsDatabase();
-//        setUpUpdateDatabase();
         instance = this;
     }
+
+
 
     private void initFilmsDatabase() {
         movieDatabase = Room
@@ -78,27 +81,20 @@ public class App extends Application {
         serviceHttp = retrofit.create(TmdbApiService.class);
     }
 
-//    private void initGeoApi() {
-//        GeoApiContext.Builder builder = new GeoApiContext.Builder();
-//        builder.apiKey(getString(R.string.googleMapApiKey));
-//        geoApiContext = builder
-//                .build();
-//    }
-
-//    private void initNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            CharSequence name = getString(R.string.notificationChannelName);
-//            String description = getString(R.string.notificationChannelDescription);
-//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
-//            channel.setDescription(description);
-//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//    }
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.notificationChannelName);
+            String description = getString(R.string.notificationChannelDescription);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     public UUID setUpUpdateDatabase(boolean hardMode) {
-        long timeToUpdate = Long.parseLong(SharedPreferencesOperation.load(KEY_NEXT_TIME_TO_UPDATE,"0"));
+        long timeToUpdate = Long.parseLong(SharedPreferencesOperation.load(KEY_NEXT_TIME_TO_UPDATE, "0"));
         if (hardMode || new Date().getTime() >= timeToUpdate) {
             WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);
             OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UpdateDatabase.class)

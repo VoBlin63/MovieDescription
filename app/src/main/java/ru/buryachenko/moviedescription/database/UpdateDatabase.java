@@ -13,9 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import ru.buryachenko.moviedescription.App;
+import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.api.MovieLoader;
 import ru.buryachenko.moviedescription.api.PageMoviesJson;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.FilmNotification;
 import ru.buryachenko.moviedescription.utilities.SharedPreferencesOperation;
 import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
@@ -73,6 +75,9 @@ public class UpdateDatabase extends Worker {
                 break;
             }
         } while (true);
+        String text = App.getInstance().getString(R.string.notificationChannelFinishBodyPart1) + " " + res + " " + App.getInstance().getString(R.string.notificationChannelFinishBodyPart2);
+        FilmNotification.pushMessage("", text);
+
         AppLog.write("" + App.getInstance().movieDatabase.movieDao().getCount() + " movies");
         AppLog.write("" + App.getInstance().movieDatabase.tagDao().getCount() + " tags");
     }

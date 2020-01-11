@@ -28,15 +28,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
-import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_FAQ;
-import static ru.buryachenko.moviedescription.Constant.FRAGMENT_LIKED;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,15 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchView search;
 
     private static Map<String, Fragment> fragments = new HashMap<>();
-
-    static {
-        fragments.put(FRAGMENT_ABOUT, new AboutFragment());
-        fragments.put(FRAGMENT_CONFIG, new ConfigFragment());
-        fragments.put(FRAGMENT_MAIN_LIST, new MainListFragment());
-        fragments.put(FRAGMENT_DETAIL, new DetailFragment());
-        fragments.put(FRAGMENT_FAQ, new FaqFragment());
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -78,6 +68,19 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> clickDrawerMenu(item.getItemId()));
 
+        App.getInstance().setUpUpdateDatabase(false);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fragments.clear();
+        fragments.put(FRAGMENT_ABOUT, new AboutFragment());
+        fragments.put(FRAGMENT_CONFIG, new ConfigFragment());
+        fragments.put(FRAGMENT_MAIN_LIST, new MainListFragment());
+        fragments.put(FRAGMENT_DETAIL, new DetailFragment());
+        fragments.put(FRAGMENT_FAQ, new FaqFragment());
         callFragment(FRAGMENT_MAIN_LIST);
     }
 
@@ -119,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean clickDrawerMenu(int idMenuItem) {
         switch (idMenuItem) {
             case R.id.menuAboutApp:
-                //callFragment(FRAGMENT_ABOUT);
-                AppLog.write("Фрагментов " + fragmentManager.getBackStackEntryCount());
-                for (Fragment fr : fragmentManager.getFragments()) {
-                    AppLog.write(" -> " + fr.getTag());
-                }
+                callFragment(FRAGMENT_ABOUT);
+//                AppLog.write("Фрагментов " + fragmentManager.getBackStackEntryCount());
+//                for (Fragment fr : fragmentManager.getFragments()) {
+//                    AppLog.write(" -> " + fr.getTag());
+//                }
                 break;
             case R.id.menuFaq:
                 callFragment(FRAGMENT_FAQ);
@@ -148,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer);
@@ -164,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void callFragment(String screenTag) {
         Fragment toCall = fragmentManager.findFragmentByTag(screenTag);
-        AppLog.write("toCall = " + toCall);
         if (toCall != null) {
             fragmentManager
                     .beginTransaction()
@@ -174,8 +178,6 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         } else {
             toCall = fragments.get(screenTag);
-            AppLog.write("toCall2 = " + toCall);
-
             if (toCall != null) {
                 fragmentManager
                         .beginTransaction()

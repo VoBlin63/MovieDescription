@@ -29,4 +29,9 @@
     <string name="menuGoLikedPrompt">Избранное</string>
     <string name="titleFragmentDetail">Подробности</string>
     <string name="titleFragmentLiked">Избранное</string>
+    <string name="notificationChannelName">Информация о фильмах</string>
+    <string name="notificationChannelDescription">Тут появляются сообщения о завершении загрузки, о обнаружении новых фильмов</string>
+    <string name="notificationChannelFinishTitle">Обновление данных</string>
+    <string name="notificationChannelFinishBodyPart1">Загружено </string>
+    <string name="notificationChannelFinishBodyPart2">фильмов в базу данных</string>
 </resources>
