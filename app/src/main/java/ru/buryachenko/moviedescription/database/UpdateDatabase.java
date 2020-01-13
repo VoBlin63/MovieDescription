@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import ru.buryachenko.moviedescription.App;
+import ru.buryachenko.moviedescription.BuildConfig;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.api.MovieLoader;
 import ru.buryachenko.moviedescription.api.PageMoviesJson;
@@ -27,7 +28,7 @@ import static ru.buryachenko.moviedescription.Constant.SLEEP_SECONDS_BETWEEN_LOA
 
 public class UpdateDatabase extends Worker {
 
-    private static final String apiKey = "c3e17ff26735628669886b00d573ab4d";
+    private static final String apiKey = BuildConfig.API_KEY_TMDB;
     private static final String language = "ru-RU";
     private static final String region = "RU";
     private static AtomicInteger page;

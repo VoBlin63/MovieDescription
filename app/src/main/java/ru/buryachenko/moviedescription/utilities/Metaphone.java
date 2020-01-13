@@ -10,7 +10,7 @@ public class Metaphone {
         txt = cyr2lat(txt);
         // single character is itself
         if (txt.length() == 1) {
-            return txt.toUpperCase();
+            return txt;
         }
 
         char[] inwd = txt.toUpperCase().toCharArray();

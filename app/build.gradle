@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+Properties props = new Properties()
+InputStream propsFile = new FileInputStream("movie_description.properties")
+props.load(propsFile)
+propsFile.close()
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -10,10 +15,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY_TMDB", props.API_KEY_TMDB
+
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -63,4 +71,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
 
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha03'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
 }

@@ -5,14 +5,12 @@ import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Set;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import ru.buryachenko.moviedescription.api.MovieJson;
-import ru.buryachenko.moviedescription.utilities.AppLog;
 
 import static ru.buryachenko.moviedescription.Constant.TMDB_PICTURE_PREFIX;
 

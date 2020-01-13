@@ -3,7 +3,7 @@ package ru.buryachenko.moviedescription;
 public final class Constant {
     public static final String LOGTAG = "MD_TAG";
     static final String UPDATE_DATABASE_WORK_TAG = "RU.BURYACHENKO.MOVIEDESCRIPTION.WORKER_UPDATE";
-    public static final int MAX_PAGES_TO_LOAD = 1;
+    public static final int MAX_PAGES_TO_LOAD = 5;
     public static final long SLEEP_SECONDS_BETWEEN_LOAD_PAGES = 3L;
     public static final String TMDB_PICTURE_PREFIX = "https://image.tmdb.org/t/p/w500/";
     public static final String FRAGMENT_CONFIG = "CONFIG";

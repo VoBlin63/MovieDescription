@@ -10,5 +10,5 @@
     <dimen name="cell_border_space">1dp</dimen>
     <dimen name="toolbarHeight">56dp</dimen>
     <dimen name="headerHeight">168dp</dimen>
-
+    <integer name="debounceFilterWait">700</integer>
 </resources>

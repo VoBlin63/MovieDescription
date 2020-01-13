@@ -4,6 +4,7 @@ import android.os.Build;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import ru.buryachenko.moviedescription.App;
+import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.database.MovieRecord;
 import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.utilities.Config;
@@ -37,6 +39,7 @@ public class MoviesViewModel extends ViewModel {
     private MovieRecord[] moviesOnScreen;
     private PublishSubject<String> filterQueue = PublishSubject.create();
     private ModeView mode = ModeView.MAIN_LIST;
+    private long debounceInterval = App.getInstance().getResources().getInteger(R.integer.debounceFilterWait);
 
     public void setMode(ModeView mode) {
         if (mode != this.mode) {
@@ -86,7 +89,7 @@ public class MoviesViewModel extends ViewModel {
                     });
         }
         filterQueue
-                .debounce(700L, TimeUnit.MILLISECONDS)
+                .debounce(debounceInterval, TimeUnit.MILLISECONDS)
                 .subscribe(value -> setFilterAfterDebounce(value));
         filterQueue.onNext(getTextFilter());
     }
@@ -120,28 +123,16 @@ public class MoviesViewModel extends ViewModel {
     }
 
     private void fillMoviesOnScreen() {
-        int count = 0;
-        if (!config.isShowOnlyFitFilter()
-                || getTextFilter().isEmpty()) {
-            count = movies.size();
-        } else {
-            for (int index = 0; index < movies.size(); index++) {
-                if (movies.valueAt(index).getUsefulness() != EMPTY_USEFULNESS) {
-                    count = count + 1;
-                }
-            }
-        }
-        MovieRecord[] res = new MovieRecord[count];
-        int currentIndex = 0;
+        ArrayList<MovieRecord> records = new ArrayList<>();
         for (int index = 0; index < movies.size(); index++) {
             if (!config.isShowOnlyFitFilter()
                     || movies.valueAt(index).getUsefulness() != EMPTY_USEFULNESS
                     || getTextFilter().isEmpty()
             ) {
-                res[currentIndex++] = movies.valueAt(index);
+                records.add(movies.valueAt(index));
             }
         }
-
+        MovieRecord[] res = records.toArray(new MovieRecord[0]);
         Arrays.sort(res, (a, b) -> a.getCompareFlag().compareTo(b.getCompareFlag()));
         moviesOnScreen = res;
     }
@@ -214,11 +205,20 @@ public class MoviesViewModel extends ViewModel {
         Observable.fromIterable(wordsList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map(w1 -> {AppLog.write(" слово: " + w1); return w1;})
+                .map(w1 -> {
+                    AppLog.write(" слово: " + w1);
+                    return w1;
+                })
                 .map(Metaphone::code)
-                .map(w1 -> {AppLog.write(" код code: " + w1); return w1;})
+                .map(w1 -> {
+                    AppLog.write(" код code: " + w1);
+                    return w1;
+                })
                 .map(ConvertibleTerms::topWord)
-                .map(w1 -> {AppLog.write(" код convertable: " + w1); return w1;})
+                .map(w1 -> {
+                    AppLog.write(" код convertable: " + w1);
+                    return w1;
+                })
                 .map(code -> App.getInstance().movieDatabase.tagDao().getSyncMovieIdsByTags(code, !config.isUseOverview()))
                 .subscribe(new Observer<List<Integer>>() {
                     @Override
