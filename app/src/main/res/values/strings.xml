@@ -12,8 +12,7 @@
     <string name="config_refreshModeWiFi">только при соединении WiFi</string>
     <string name="config_refreshModeAll">при любом соединении</string>
     <string name="menu_aboutApp">О программе</string>
-    <string name="menu_Faq">FAQ</string>
-    <string name="menu_likedList">Избранные фильмы</string>
+    <string name="menu_likedList">Отобранные фильмы</string>
     <string name="menu_mainScreen">Фильмы</string>
     <string name="menu_config">Настройки</string>
     <string name="menu_quit">Выход</string>
@@ -26,12 +25,31 @@
     <string name="searchHint">Поиск</string>
     <string name="shareMoviePrompt">Поделиться фильмом</string>
     <string name="menuGoMainPrompt">На основной экран</string>
-    <string name="menuGoLikedPrompt">Избранное</string>
+    <string name="menuGoLikedPrompt">Отобранные</string>
     <string name="titleFragmentDetail">Подробности</string>
-    <string name="titleFragmentLiked">Избранное</string>
+    <string name="titleFragmentLiked">Отобранные</string>
     <string name="notificationChannelName">Информация о фильмах</string>
     <string name="notificationChannelDescription">Тут появляются сообщения о завершении загрузки, о обнаружении новых фильмов</string>
     <string name="notificationChannelFinishTitle">Обновление данных</string>
     <string name="notificationChannelFinishBodyPart1">Загружено </string>
     <string name="notificationChannelFinishBodyPart2">фильмов в базу данных</string>
+    <string name="aboutHtml">
+        <![CDATA[
+        <h3>Программа поиска фильмов</h3>
+        <p>Часто хочется вспомнить название фильма ,где было то-то и и то-то. Теперь это возможно!</p>
+        <p>Просто введите слова в строку поиска и будут отобраны все фильмы где в названии(или и в описании) встречаются слова, по зозвучию похожие на искомые.</p>
+        <ul>
+        <li>Фильмы</li>
+        <p>Здесь все доступные фильмы, долгим нажатием вы можете пометить фильм как отобранный. Можно выполнить поиск/фильтрацию.
+        Простым тапом вы можете открыть детальную информацию о фильме. Отсортированы сначала по вероятности соотвествия поисковой фразе и потом по названию</p>
+        <li>Отобранные</li>
+        <p>Здесь список отобранных Вами фильмов, независимо от параметров поиска</p>
+        <li>Настройки</li>
+        <p>Только соответствующие - в списке фильмов будут ТОЛЬКО те, в которых есть искомые слова</p>
+        <p>Поиск в описании фильма - поиск не только в названии, но и в описании фильма</p>
+        <p>Пауза между загрузкой страниц - дописать</p>
+        <p>Обновление списка фильмов - дописать</p>
+        </ul>
+        ]]>
+    </string>
 </resources>

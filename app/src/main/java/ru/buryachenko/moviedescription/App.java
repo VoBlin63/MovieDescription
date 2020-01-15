@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.UUID;
 
 import androidx.room.Room;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import okhttp3.OkHttpClient;
@@ -19,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.buryachenko.moviedescription.api.TmdbApiService;
 import ru.buryachenko.moviedescription.database.MovieDatabase;
 import ru.buryachenko.moviedescription.database.UpdateDatabase;
+import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.utilities.SharedPreferencesOperation;
 
 import static ru.buryachenko.moviedescription.Constant.KEY_NEXT_TIME_TO_UPDATE;
@@ -95,12 +98,21 @@ public class App extends Application {
 
     public UUID setUpUpdateDatabase(boolean hardMode) {
         long timeToUpdate = Long.parseLong(SharedPreferencesOperation.load(KEY_NEXT_TIME_TO_UPDATE, "0"));
+        Config config = Config.getInstance();
         if (hardMode || new Date().getTime() >= timeToUpdate) {
             WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiresBatteryNotLow(!hardMode)
+                    .setRequiresDeviceIdle(!hardMode)
+                    .setRequiredNetworkType(config.isUseOnlyWiFi() ? NetworkType.UNMETERED : NetworkType.CONNECTED)
+                    .setRequiresStorageNotLow(true)
+                    .build();
             OneTimeWorkRequest uploadWorkRequest = new OneTimeWorkRequest.Builder(UpdateDatabase.class)
                     .addTag(UPDATE_DATABASE_WORK_TAG)
+                    .setConstraints(constraints)
                     .build();
-            WorkManager.getInstance().enqueue(uploadWorkRequest);
+            WorkManager.getInstance().
+                    enqueue(uploadWorkRequest);
             return uploadWorkRequest.getId();
         } else {
             return null;

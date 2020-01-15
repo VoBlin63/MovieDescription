@@ -7,7 +7,6 @@ public final class Constant {
     public static final long SLEEP_SECONDS_BETWEEN_LOAD_PAGES = 3L;
     public static final String TMDB_PICTURE_PREFIX = "https://image.tmdb.org/t/p/w500/";
     public static final String FRAGMENT_CONFIG = "CONFIG";
-    public static final String FRAGMENT_FAQ = "FAQ";
     public static final String FRAGMENT_ABOUT = "ABOUT";
     public static final String FRAGMENT_LIKED = "LIKED";
     public static final String FRAGMENT_MAIN_LIST = "MAIN_LIST";

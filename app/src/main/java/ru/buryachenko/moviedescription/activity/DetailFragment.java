@@ -105,8 +105,6 @@ public class DetailFragment extends Fragment {
 
             ((TextView) layout.findViewById(R.id.detailPopularity)).setText(movie.getPopularityTransformed());
             ((TextView) layout.findViewById(R.id.detailReleaseDate)).setText(movie.getReleaseDateTransformed());
-
-//            viewModel.setIndexForOpen(-1);
         }
     }
 }

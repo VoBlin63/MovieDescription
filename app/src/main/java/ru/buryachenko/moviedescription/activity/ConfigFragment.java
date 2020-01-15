@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ru.buryachenko.moviedescription.R;
-import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.utilities.Config;
 
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
@@ -75,18 +74,18 @@ public class ConfigFragment extends Fragment {
         wifi.setChecked(config.isUseOnlyWiFi());
         all.setChecked(!config.isUseOnlyWiFi());
 
-        connectionMode.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case -1:
-                    break;
-                case R.id.configConnectionModeWiFi:
-                    AppLog.write("set mode WiFi");
-                    break;
-                case R.id.configConnectionModeAll:
-                    AppLog.write("set mode All");
-                    break;
-            }
-        });
+//        connectionMode.setOnCheckedChangeListener((group, checkedId) -> {
+//            switch (checkedId) {
+//                case -1:
+//                    break;
+//                case R.id.configConnectionModeWiFi:
+//                    AppLog.write("set mode WiFi");
+//                    break;
+//                case R.id.configConnectionModeAll:
+//                    AppLog.write("set mode All");
+//                    break;
+//            }
+//        });
     }
 
     @Override

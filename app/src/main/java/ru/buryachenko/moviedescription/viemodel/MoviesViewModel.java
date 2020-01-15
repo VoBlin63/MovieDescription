@@ -75,7 +75,6 @@ public class MoviesViewModel extends ViewModel {
                             movieRecords.forEach(it -> movies.put(it.getId(), it));
                             clearUsefulness();
                             listReady.postValue(true);
-                            AppLog.write("Got list");
                         }
 
                         @Override
@@ -95,41 +94,34 @@ public class MoviesViewModel extends ViewModel {
     }
 
     public MovieRecord[] getListMovies() {
-        if (moviesOnScreen == null)
-            if (mode == ModeView.MAIN_LIST) {
-                fillMoviesOnScreen();
-            } else {
-                fillLikedOnScreen();
-            }
+        if (moviesOnScreen == null) {
+            fillMoviesOnScreen();
+        }
         return moviesOnScreen;
-    }
-
-    private void fillLikedOnScreen() {
-        int count = 0;
-        for (int index = 0; index < movies.size(); index++) {
-            if (movies.valueAt(index).isLiked()) {
-                count = count + 1;
-            }
-        }
-        MovieRecord[] res = new MovieRecord[count];
-        int currentIndex = 0;
-        for (int index = 0; index < movies.size(); index++) {
-            if (movies.valueAt(index).isLiked()) {
-                res[currentIndex++] = movies.valueAt(index);
-            }
-        }
-        Arrays.sort(res, (a, b) -> a.getCompareFlag().compareTo(b.getCompareFlag()));
-        moviesOnScreen = res;
     }
 
     private void fillMoviesOnScreen() {
         ArrayList<MovieRecord> records = new ArrayList<>();
-        for (int index = 0; index < movies.size(); index++) {
-            if (!config.isShowOnlyFitFilter()
-                    || movies.valueAt(index).getUsefulness() != EMPTY_USEFULNESS
-                    || getTextFilter().isEmpty()
-            ) {
-                records.add(movies.valueAt(index));
+        if (mode == ModeView.LIKED_LIST) {
+            for (int index = 0; index < movies.size(); index++) {
+                MovieRecord movie = movies.valueAt(index);
+                if (movie.isLiked()) {
+                    records.add(movie);
+                }
+            }
+        } else {
+            if (getTextFilter().isEmpty()) {
+                for (int index = 0; index < movies.size(); index++) {
+                        records.add(movies.valueAt(index));
+                    }
+            } else {
+                for (int index = 0; index < movies.size(); index++) {
+                    MovieRecord movie = movies.valueAt(index);
+                    if (!(config.isShowOnlyFitFilter()
+                            && movie.getUsefulness() == EMPTY_USEFULNESS)) {
+                        records.add(movie);
+                    }
+                }
             }
         }
         MovieRecord[] res = records.toArray(new MovieRecord[0]);

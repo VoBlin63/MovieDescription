@@ -35,7 +35,6 @@ import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
-import static ru.buryachenko.moviedescription.Constant.FRAGMENT_FAQ;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         fragments.put(FRAGMENT_CONFIG, new ConfigFragment());
         fragments.put(FRAGMENT_MAIN_LIST, new MainListFragment());
         fragments.put(FRAGMENT_DETAIL, new DetailFragment());
-        fragments.put(FRAGMENT_FAQ, new FaqFragment());
         callFragment(FRAGMENT_MAIN_LIST);
     }
 
@@ -123,13 +121,6 @@ public class MainActivity extends AppCompatActivity {
         switch (idMenuItem) {
             case R.id.menuAboutApp:
                 callFragment(FRAGMENT_ABOUT);
-//                AppLog.write("Фрагментов " + fragmentManager.getBackStackEntryCount());
-//                for (Fragment fr : fragmentManager.getFragments()) {
-//                    AppLog.write(" -> " + fr.getTag());
-//                }
-                break;
-            case R.id.menuFaq:
-                callFragment(FRAGMENT_FAQ);
                 break;
             case R.id.menuLikedList:
                 viewModel.setMode(MoviesViewModel.ModeView.LIKED_LIST);
