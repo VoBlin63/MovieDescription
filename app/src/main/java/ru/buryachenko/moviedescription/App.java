@@ -17,8 +17,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.buryachenko.moviedescription.api.TmdbApiService;
+import ru.buryachenko.moviedescription.api.TmdbApiServiceRx;
 import ru.buryachenko.moviedescription.database.MovieDatabase;
 import ru.buryachenko.moviedescription.database.UpdateDatabase;
 import ru.buryachenko.moviedescription.utilities.Config;
@@ -29,7 +30,7 @@ import static ru.buryachenko.moviedescription.Constant.NOTIFICATION_CHANNEL_ID;
 import static ru.buryachenko.moviedescription.Constant.UPDATE_DATABASE_WORK_TAG;
 
 public class App extends Application {
-    public TmdbApiService serviceHttp;
+    public TmdbApiServiceRx serviceHttp;
     public MovieDatabase movieDatabase;
 
     private static App instance;
@@ -42,7 +43,6 @@ public class App extends Application {
         initFilmsDatabase();
         instance = this;
     }
-
 
 
     private void initFilmsDatabase() {
@@ -78,10 +78,11 @@ public class App extends Application {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl("https://api.themoviedb.org/")
+                .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-        serviceHttp = retrofit.create(TmdbApiService.class);
+        serviceHttp = retrofit.create(TmdbApiServiceRx.class);
     }
 
     private void initNotificationChannel() {

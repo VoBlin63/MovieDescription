@@ -69,7 +69,6 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 android.R.color.holo_blue_dark);
         viewModel.getChangedItem().observe(this, index-> adapter.notifyItemChanged(index));
         viewModel.getListReady().observe(this, status -> {
-            AppLog.write("Got list ready: " + status);
             if (status) {
                 getActivity().invalidateOptionsMenu();
                 viewModel.resetList();
@@ -120,7 +119,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
             if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
                 swipeRefresher.setRefreshing(false);
             } else {
-                AppLog.write(" setUpUpdateDatabase finished status : " + workInfo.getState());
+                AppLog.write("UpdateDatabase finished status : " + workInfo.getState());
             }
         });
     }
