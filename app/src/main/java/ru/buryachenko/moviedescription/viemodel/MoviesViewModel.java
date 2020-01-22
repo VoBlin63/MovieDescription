@@ -27,9 +27,11 @@ import ru.buryachenko.moviedescription.utilities.ConvertibleTerms;
 import ru.buryachenko.moviedescription.utilities.Metaphone;
 import ru.buryachenko.moviedescription.utilities.SonicUtils;
 
+import static ru.buryachenko.moviedescription.Constant.EMPTY_MOVIE_ID;
+
 public class MoviesViewModel extends ViewModel {
     private String textFilter = "";
-    private int indexForOpenDetail = -1;
+    private int idForOpenDetail = EMPTY_MOVIE_ID;
     private Config config = Config.getInstance();
     private SparseArray<MovieRecord> movies = new SparseArray<>();
     private MutableLiveData<Boolean> listReady = new MutableLiveData<>();
@@ -112,8 +114,8 @@ public class MoviesViewModel extends ViewModel {
         } else {
             if (getTextFilter().isEmpty()) {
                 for (int index = 0; index < movies.size(); index++) {
-                        records.add(movies.valueAt(index));
-                    }
+                    records.add(movies.valueAt(index));
+                }
             } else {
                 for (int index = 0; index < movies.size(); index++) {
                     MovieRecord movie = movies.valueAt(index);
@@ -139,11 +141,19 @@ public class MoviesViewModel extends ViewModel {
         filterQueue.onNext(textFilter);
     }
 
-    public void turnLiked(int adapterPosition) {
-        MovieRecord movie = moviesOnScreen[adapterPosition];
+    public void turnLiked(MovieRecord movie) {
         movie.turnLiked();
         cacheLiked.put(movie.getId(), movie.isLiked());
-        changedItem.postValue(adapterPosition);
+        int adapterPosition = -1;
+        for (int i = 0; i < moviesOnScreen.length; i++) {
+            if (moviesOnScreen[i].getId().equals(movie.getId())) {
+                adapterPosition = i;
+                break;
+            }
+        }
+        if (adapterPosition >= 0) {
+            changedItem.postValue(adapterPosition);
+        }
     }
 
     public LiveData<Integer> getChangedItem() {
@@ -254,12 +264,16 @@ public class MoviesViewModel extends ViewModel {
         return listReady;
     }
 
-    public int getIndexForOpenDetail() {
-        return indexForOpenDetail;
+    public int getIdForOpenDetail() {
+        return idForOpenDetail;
     }
 
-    public void setIndexForOpen(int indexForOpen) {
-        this.indexForOpenDetail = indexForOpen;
+    public void setIdForOpen(int idForOpen) {
+        this.idForOpenDetail = idForOpen;
+    }
+
+    public MovieRecord getMovieById(int id) {
+        return movies.get(id);
     }
 
     public enum ModeView {MAIN_LIST, LIKED_LIST}

@@ -4,6 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
     <item
+        android:id="@+id/menuDetailRemain"
+        android:icon="@drawable/ic_menu_remain"
+        app:showAsAction="always"
+        android:title="@string/menuDetailRemain" />
+    <item
         android:id="@+id/menuDetailShare"
         android:icon="@drawable/ic_menu_share"
         app:showAsAction="always"

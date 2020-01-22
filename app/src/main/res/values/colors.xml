@@ -7,5 +7,5 @@
     <color name="colorBackgroundField">#0A200A</color>
     <color name="colorText">#FDE64A</color>
     <color name="colorUnchecked">#1B991F</color>
-
+    <color name="colorBackgroundTitleRemain">#009688</color>
 </resources>

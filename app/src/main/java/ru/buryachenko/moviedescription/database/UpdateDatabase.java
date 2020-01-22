@@ -93,7 +93,7 @@ public class UpdateDatabase extends Worker {
         page.set(-1);
         this.result = result;
         String text = App.getInstance().getString(R.string.notificationChannelFinishBodyPart1) + " " + updateCount + " " + App.getInstance().getString(R.string.notificationChannelFinishBodyPart2);
-        FilmNotification.pushMessage("", text);
+        FilmNotification.pushMessageUpdateFinished("", text);
         AppLog.write("" + App.getInstance().movieDatabase.movieDao().getCount() + " movies");
         AppLog.write("" + App.getInstance().movieDatabase.tagDao().getCount() + " tags");
         AppLog.write(text);

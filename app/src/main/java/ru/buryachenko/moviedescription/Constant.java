@@ -18,5 +18,9 @@ public final class Constant {
     public static final String CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES = "KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES";
     public static final String CONFIG_KEY_USE_ONLY_WIFI = "KEY_USE_ONLY_WIFI";
     public static final String KEY_NEXT_TIME_TO_UPDATE = "KEY_NEXT_TIME_TO_UPDATE";
+    public static final String ALARM_KEY_MOVIE_ACTION = "ALARM_KEY_MOVIE_ACTION";
+    public static final String ALARM_KEY_MOVIE_TEXT = "ALARM_KEY_MOVIE_TEXT";
+    public static final String ALARM_KEY_MOVIE_ID = "ALARM_KEY_MOVIE_ID";
 
+    public static final int EMPTY_MOVIE_ID = -1;
 }

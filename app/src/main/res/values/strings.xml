@@ -22,6 +22,7 @@
     <string name="drawerOpen">R.string.navigation_drawer_open</string>
     <string name="drawerClose">R.string.navigation_drawer_close</string>
     <string name="menuDetailShare">Поделиться</string>
+    <string name="menuDetailRemain">Напомнить</string>
     <string name="searchHint">Поиск</string>
     <string name="shareMoviePrompt">Поделиться фильмом</string>
     <string name="menuGoMainPrompt">На основной экран</string>
@@ -52,4 +53,8 @@
         </ul>
         ]]>
     </string>
+    <string name="dialogRemainButtonSetAlert">Установить</string>
+    <string name="dialogRemainButtonCancel">Отменить</string>
+    <string name="dialogRemainAlertText">Вспомните про фильм</string>
+    <string name="dialogRemainAlertTitle">Напоминание</string>
 </resources>

@@ -53,13 +53,13 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListHolder> {
 
     private void openMovie(View view, int adapterPosition) {
         MainListAnimation.press(view);
-        viewModel.setIndexForOpen(adapterPosition);
+        viewModel.setIdForOpen(moviesList[adapterPosition].getId());
         activity.callFragment(FRAGMENT_DETAIL);
     }
 
     private boolean turnLiked(View view, int adapterPosition) {
         MainListAnimation.press(view);
-        viewModel.turnLiked(adapterPosition);
+        viewModel.turnLiked(moviesList[adapterPosition]);
         notifyItemChanged(adapterPosition);
         return true;
     }

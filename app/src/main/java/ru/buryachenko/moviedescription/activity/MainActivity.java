@@ -3,13 +3,16 @@ package ru.buryachenko.moviedescription.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -27,11 +30,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
+import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
+import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
+import static ru.buryachenko.moviedescription.Constant.ALARM_KEY_MOVIE_ID;
+import static ru.buryachenko.moviedescription.Constant.ALARM_KEY_MOVIE_TEXT;
+import static ru.buryachenko.moviedescription.Constant.EMPTY_MOVIE_ID;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_ABOUT;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_CONFIG;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
@@ -69,6 +78,20 @@ public class MainActivity extends AppCompatActivity {
 
         App.getInstance().setUpUpdateDatabase(false);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            acceptMovie(extras);
+        }
+    }
+
+    private void acceptMovie(Bundle data) {
+        String text = data.getString(ALARM_KEY_MOVIE_TEXT,"");
+        int movieId = data.getInt(ALARM_KEY_MOVIE_ID, EMPTY_MOVIE_ID);
+        viewModel.setIdForOpen(movieId);
+        AppLog.write("Got movieId for open : " + movieId);
+        if (!text.isEmpty()) {
+            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -141,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     @Override

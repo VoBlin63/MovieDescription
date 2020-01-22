@@ -30,6 +30,8 @@ import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter
 import ru.buryachenko.moviedescription.utilities.AppLog;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
+import static ru.buryachenko.moviedescription.Constant.EMPTY_MOVIE_ID;
+import static ru.buryachenko.moviedescription.Constant.FRAGMENT_DETAIL;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_LIKED;
 import static ru.buryachenko.moviedescription.Constant.FRAGMENT_MAIN_LIST;
 
@@ -54,6 +56,10 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getActivity() == null) {
+            AppLog.write("Ops, getActivity() == null in MainListFragment.onViewCreated");
+            return;
+        }
         viewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
         layout = view;
 
@@ -74,6 +80,9 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 viewModel.resetList();
                 adapter = new MainListAdapter(LayoutInflater.from(layout.getContext()), viewModel, cellWidth, cellHeight, (MainActivity) getActivity());
                 recyclerView.setAdapter(adapter);
+                if (viewModel.getIdForOpenDetail() != EMPTY_MOVIE_ID) {
+                    ((MainActivity) getActivity()).callFragment(FRAGMENT_DETAIL);
+                }
             }
         });
 
