@@ -5,8 +5,7 @@ import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_SLEEP_SECONDS_
 import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_USE_ONLY_WIFI;
 import static ru.buryachenko.moviedescription.Constant.CONFIG_KEY_USE_OVERVIEW;
 
-public class Config
-{
+public class Config {
     private static Config config;
     private boolean isUseOverview = true;
     private boolean isShowOnlyFitFilter = true;
@@ -14,17 +13,17 @@ public class Config
     private boolean isUseOnlyWiFi = true;
 
     public void load() {
-        isUseOverview = Boolean.parseBoolean(SharedPreferencesOperation.load(CONFIG_KEY_USE_OVERVIEW,"FALSE"));
-        isShowOnlyFitFilter = Boolean.parseBoolean(SharedPreferencesOperation.load(CONFIG_KEY_SHOW_ONLY_FIT_FILTER,"TRUE"));
-        sleepSecondsBetweenLoadPages = Integer.parseInt(SharedPreferencesOperation.load(CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES,"7"));
-        isUseOnlyWiFi = Boolean.parseBoolean(SharedPreferencesOperation.load(CONFIG_KEY_USE_ONLY_WIFI,"TRUE"));
+        isUseOverview = Boolean.parseBoolean(SharedPreferencesOperation.getInstance().load(CONFIG_KEY_USE_OVERVIEW, "FALSE"));
+        isShowOnlyFitFilter = Boolean.parseBoolean(SharedPreferencesOperation.getInstance().load(CONFIG_KEY_SHOW_ONLY_FIT_FILTER, "TRUE"));
+        sleepSecondsBetweenLoadPages = Integer.parseInt(SharedPreferencesOperation.getInstance().load(CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES, "7"));
+        isUseOnlyWiFi = Boolean.parseBoolean(SharedPreferencesOperation.getInstance().load(CONFIG_KEY_USE_ONLY_WIFI, "TRUE"));
     }
 
     public void save() {
-        SharedPreferencesOperation.save(CONFIG_KEY_USE_OVERVIEW, String.valueOf(isUseOverview));
-        SharedPreferencesOperation.save(CONFIG_KEY_SHOW_ONLY_FIT_FILTER,String.valueOf(isShowOnlyFitFilter));
-        SharedPreferencesOperation.save(CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES,String.valueOf(sleepSecondsBetweenLoadPages));
-        SharedPreferencesOperation.save(CONFIG_KEY_USE_ONLY_WIFI,String.valueOf(isUseOnlyWiFi));
+        SharedPreferencesOperation.getInstance().save(CONFIG_KEY_USE_OVERVIEW, String.valueOf(isUseOverview));
+        SharedPreferencesOperation.getInstance().save(CONFIG_KEY_SHOW_ONLY_FIT_FILTER, String.valueOf(isShowOnlyFitFilter));
+        SharedPreferencesOperation.getInstance().save(CONFIG_KEY_SLEEP_SECONDS_BETWEEN_LOAD_PAGES, String.valueOf(sleepSecondsBetweenLoadPages));
+        SharedPreferencesOperation.getInstance().save(CONFIG_KEY_USE_ONLY_WIFI, String.valueOf(isUseOnlyWiFi));
     }
 
     private Config() {

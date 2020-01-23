@@ -24,6 +24,8 @@ import ru.buryachenko.moviedescription.database.MovieDatabase;
 import ru.buryachenko.moviedescription.database.UpdateDatabase;
 import ru.buryachenko.moviedescription.utilities.Config;
 import ru.buryachenko.moviedescription.utilities.SharedPreferencesOperation;
+import ru.buryachenko.moviedescription.utilities.di.component.DaggerStorageComponent;
+import ru.buryachenko.moviedescription.utilities.di.component.StorageComponent;
 
 import static ru.buryachenko.moviedescription.Constant.KEY_NEXT_TIME_TO_UPDATE;
 import static ru.buryachenko.moviedescription.Constant.NOTIFICATION_CHANNEL_ID;
@@ -32,7 +34,7 @@ import static ru.buryachenko.moviedescription.Constant.UPDATE_DATABASE_WORK_TAG;
 public class App extends Application {
     public TmdbApiServiceRx serviceHttp;
     public MovieDatabase movieDatabase;
-
+    private static StorageComponent component;
     private static App instance;
 
     @Override
@@ -41,9 +43,13 @@ public class App extends Application {
         initNotificationChannel();
         initRetrofit();
         initFilmsDatabase();
+        component = DaggerStorageComponent.create();
         instance = this;
     }
 
+    public static StorageComponent getComponent() {
+        return component;
+    }
 
     private void initFilmsDatabase() {
         movieDatabase = Room
@@ -98,7 +104,7 @@ public class App extends Application {
     }
 
     public UUID setUpUpdateDatabase(boolean hardMode) {
-        long timeToUpdate = Long.parseLong(SharedPreferencesOperation.load(KEY_NEXT_TIME_TO_UPDATE, "0"));
+        long timeToUpdate = Long.parseLong(SharedPreferencesOperation.getInstance().load(KEY_NEXT_TIME_TO_UPDATE, "0"));
         Config config = Config.getInstance();
         if (hardMode || new Date().getTime() >= timeToUpdate) {
             WorkManager.getInstance().cancelAllWorkByTag(UPDATE_DATABASE_WORK_TAG);

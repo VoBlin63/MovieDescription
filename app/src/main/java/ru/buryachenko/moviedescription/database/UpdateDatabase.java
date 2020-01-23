@@ -89,7 +89,7 @@ public class UpdateDatabase extends Worker {
     }
 
     private void finishWork(AtomicInteger page, Result result) {
-        SharedPreferencesOperation.save(KEY_NEXT_TIME_TO_UPDATE, String.valueOf(new Date().getTime() + 1000L * 60 * 60 * 24));
+        SharedPreferencesOperation.getInstance().save(KEY_NEXT_TIME_TO_UPDATE, String.valueOf(new Date().getTime() + 1000L * 60 * 60 * 24));
         page.set(-1);
         this.result = result;
         String text = App.getInstance().getString(R.string.notificationChannelFinishBodyPart1) + " " + updateCount + " " + App.getInstance().getString(R.string.notificationChannelFinishBodyPart2);
