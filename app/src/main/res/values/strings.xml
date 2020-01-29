@@ -4,7 +4,7 @@
     <string name="config_useOverview">Поиск в описании фильма</string>
     <string name="configSleepSecondsBetweenLoadPages1">Пауза между загрузкой страниц (</string>
     <string name="configSleepSecondsBetweenLoadPages2">сек.)</string>
-    <string name="mailListItemPictureDescription">Миниатюра фильма</string>
+    <string name="mailListItemPictureDescription" translatable="false">Миниатюра фильма</string>
     <string name="mainListAskUpdateDb">Обновить список фильмов ?</string>
     <string name="mainListUpdateCancel">Не надо</string>
     <string name="mainListUpdateYes">Обновить</string>
@@ -16,11 +16,11 @@
     <string name="menu_mainScreen">Фильмы</string>
     <string name="menu_config">Настройки</string>
     <string name="menu_quit">Выход</string>
-    <string name="mainActivityAskToExit">Вы хотите выйти?</string>
+    <string name="mainActivityAskToExit">Вы хотите выйти ?</string>
     <string name="mainActivityAskToExitYes">Остаться</string>
     <string name="mainActivityAskToExitCancel">Выйти</string>
-    <string name="drawerOpen">R.string.navigation_drawer_open</string>
-    <string name="drawerClose">R.string.navigation_drawer_close</string>
+    <string name="drawerOpen" translatable="false">R.string.navigation_drawer_open</string>
+    <string name="drawerClose" translatable="false">R.string.navigation_drawer_close</string>
     <string name="menuDetailShare">Поделиться</string>
     <string name="menuDetailRemain">Напомнить</string>
     <string name="searchHint">Поиск</string>
@@ -30,7 +30,7 @@
     <string name="titleFragmentDetail">Подробности</string>
     <string name="titleFragmentLiked">Отобранные</string>
     <string name="notificationChannelName">Информация о фильмах</string>
-    <string name="notificationChannelDescription">Тут появляются сообщения о завершении загрузки, о обнаружении новых фильмов</string>
+    <string name="notificationChannelDescription">Тут появляются сообщения о завершении загрузки и напоминания о фильме</string>
     <string name="notificationChannelFinishTitle">Обновление данных</string>
     <string name="notificationChannelFinishBodyPart1">Загружено </string>
     <string name="notificationChannelFinishBodyPart2">фильмов в базу данных</string>
@@ -38,7 +38,7 @@
         <![CDATA[
         <h3>Программа поиска фильмов</h3>
         <p>Часто хочется вспомнить название фильма ,где было то-то и и то-то. Теперь это возможно!</p>
-        <p>Просто введите слова в строку поиска и будут отобраны все фильмы где в названии(или и в описании) встречаются слова, по зозвучию похожие на искомые.</p>
+        <p>Просто введите слова в строку поиска и будут отобраны все фильмы где в названии(или и в описании) встречаются слова, по созвучию похожие на искомые.</p>
         <ul>
         <li>Фильмы</li>
         <p>Здесь все доступные фильмы, долгим нажатием вы можете пометить фильм как отобранный. Можно выполнить поиск/фильтрацию.
@@ -48,8 +48,8 @@
         <li>Настройки</li>
         <p>Только соответствующие - в списке фильмов будут ТОЛЬКО те, в которых есть искомые слова</p>
         <p>Поиск в описании фильма - поиск не только в названии, но и в описании фильма</p>
-        <p>Пауза между загрузкой страниц - дописать</p>
-        <p>Обновление списка фильмов - дописать</p>
+        <p>Пауза между загрузкой страниц - между загрузкой страниц будет выдержана указанная пауза</p>
+        <p>Обновление списка фильмов - можно настроить будет ли оно происходить только при WiFi поключении</p>
         </ul>
         ]]>
     </string>

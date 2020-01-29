@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Film finder</string>
+    <string name="configSleepSecondsBetweenLoadPages1">Pause between load pages (</string>
+    <string name="configSleepSecondsBetweenLoadPages2">sec.)</string>
+    <string name="config_isPerfectFilterOnly">Only matches</string>
+    <string name="config_refreshMode">Movies update</string>
+    <string name="config_refreshModeAll">at any connection</string>
+    <string name="config_refreshModeWiFi">only with WiFi connection</string>
+    <string name="config_useOverview">Search in movie description</string>
+    <string name="dialogRemainAlertText">Remember the movie</string>
+    <string name="dialogRemainAlertTitle">Reminder</string>
+    <string name="dialogRemainButtonCancel">Cancel</string>
+    <string name="dialogRemainButtonSetAlert">Set</string>
+    <string name="mainActivityAskToExitCancel">Quit</string>
+    <string name="mainActivityAskToExitYes">No</string>
+    <string name="searchHint">Find</string>
+    <string name="shareMoviePrompt">Share movie</string>
+    <string name="titleFragmentDetail">Details</string>
+    <string name="titleFragmentLiked">Favorites</string>
+    <string name="notificationChannelName">Movie Information</string>
+    <string name="notificationChannelFinishTitle">Movies update</string>
+    <string name="notificationChannelFinishBodyPart1">Loaded</string>
+    <string name="notificationChannelFinishBodyPart2">movies</string>
+    <string name="aboutHtml">
+        <![CDATA[
+        <h3>Movie finder</h3>
+        <p>Often I want to remember the name of the film, where it was this and that. Now it is possible!</p>
+        <p>Just enter the words in the search bar and all the films will be selected where in the title (or in the description) there are words that sound similar to those you are looking for.</p>
+        <ul>
+        <li>Movies</li>
+        <p>Here are all the available films, with a long press you can mark the film as selected. You can search / filter.
+         With a simple tap you can open detailed information about the film. Sorted first by probability of matching search phrase and then by name</p>
+        <li>Favorites</li>
+        <p>Here is a list of films you have selected, regardless of the search options</p>
+        <li>Settings</li>
+        <p>Only relevant - in the list of films will be ONLY those in which there are searched words</p>
+        <p>Search in the movie description - search not only in the title, but also in the movie description</p>
+        <p>Pause between page loading - the specified pause will be maintained between page loading</p>
+        <p>Updating the list of films - you can configure whether it will happen only with WiFi connection</p>
+        </ul>
+        ]]>
+    </string>
+    <string name="notificationChannelDescription">Here appear messages about the completion of the download and reminders of the movie</string>
+    <string name="menu_quit">Quit</string>
+    <string name="menu_likedList">Favorites</string>
+    <string name="menu_mainScreen">Movies</string>
+    <string name="menuGoMainPrompt">Main list</string>
+    <string name="menu_aboutApp">About</string>
+    <string name="menu_config">Configuration</string>
+    <string name="menuGoLikedPrompt">Favorites</string>
+    <string name="menuDetailShare">Share</string>
+    <string name="menuDetailRemain">Remind</string>
+    <string name="mainListUpdateYes">Refresh</string>
+    <string name="mainListUpdateCancel">No</string>
+    <string name="mainListAskUpdateDb">Refresh movies ?</string>
+    <string name="mainActivityAskToExit">Do you want to go out?</string>
+</resources>

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,9 +32,6 @@ import static ru.buryachenko.moviedescription.Constant.SLEEP_SECONDS_BETWEEN_LOA
 public class UpdateDatabase extends Worker {
 
     private static final String apiKey = BuildConfig.API_KEY_TMDB;
-    private static final String language = "ru-RU";
-    private static final String region = "RU";
-
     private Result result;
     private int updateCount;
 
@@ -41,6 +39,13 @@ public class UpdateDatabase extends Worker {
         super(context, workerParams);
     }
 
+    private String getStringLanguage() {
+        return Locale.getDefault().getLanguage().equals("ru") ? "ru-RU" : "en-US";
+    }
+
+    private String getStringRegion() {
+        return Locale.getDefault().getLanguage().equals("ru") ? "RU" : "US";
+    }
 
     @NonNull
     @Override
@@ -62,7 +67,7 @@ public class UpdateDatabase extends Worker {
         } catch (InterruptedException e) {
         }
         App.getInstance()
-                .serviceHttp.getMoviePage(apiKey, page.getAndIncrement(), language, region)
+                .serviceHttp.getMoviePage(apiKey, page.getAndIncrement(), getStringLanguage(), getStringRegion())
                 .toFlowable()
                 .subscribe(pageMoviesJson -> acceptPage(pageMoviesJson, page, likedList),
                         throwable -> catchError(throwable, page, likedList, counter));
