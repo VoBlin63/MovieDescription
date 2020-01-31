@@ -8,6 +8,8 @@
     <string name="mainListAskUpdateDb">Обновить список фильмов ?</string>
     <string name="mainListUpdateCancel">Не надо</string>
     <string name="mainListUpdateYes">Обновить</string>
+    <string name="mainListMessageNoInternet">Нет подключения к интернет</string>
+    <string name="mainListMessageNoWiFi">Обновить можно только через WiFi</string>
     <string name="config_refreshMode">Обновление списка фильмов</string>
     <string name="config_refreshModeWiFi">только при соединении WiFi</string>
     <string name="config_refreshModeAll">при любом соединении</string>

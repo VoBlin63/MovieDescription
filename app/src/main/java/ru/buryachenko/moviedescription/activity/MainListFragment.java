@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -28,6 +29,8 @@ import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
 import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.Config;
+import ru.buryachenko.moviedescription.utilities.NetworkStatusCheck;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.EMPTY_MOVIE_ID;
@@ -73,7 +76,7 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
-        viewModel.getChangedItem().observe(this, index-> adapter.notifyItemChanged(index));
+        viewModel.getChangedItem().observe(this, index -> adapter.notifyItemChanged(index));
         viewModel.getListReady().observe(this, status -> {
             if (status) {
                 getActivity().invalidateOptionsMenu();
@@ -139,8 +142,25 @@ public class MainListFragment extends Fragment implements SwipeRefreshLayout.OnR
         viewModel.pushLiked(false);
     }
 
+    private boolean noMatchConnection() {
+        NetworkStatusCheck.NetworkState current = ((MainActivity) getActivity()).getTypeConnect();
+        if (current == NetworkStatusCheck.NetworkState.NO) {
+            Toast.makeText(getContext(), getActivity().getString(R.string.mainListMessageNoInternet), Toast.LENGTH_LONG).show();
+            return true;
+        }
+        if (current == NetworkStatusCheck.NetworkState.MOBILE && Config.getInstance().isUseOnlyWiFi()) {
+            Toast.makeText(getContext(), getActivity().getString(R.string.mainListMessageNoWiFi), Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onRefresh() {
+        if (noMatchConnection()) {
+            swipeRefresher.setRefreshing(false);
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         DialogInterface.OnClickListener listener =
                 (dialog, which) -> {

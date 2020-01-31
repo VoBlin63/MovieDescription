@@ -55,4 +55,6 @@
     <string name="mainListUpdateCancel">No</string>
     <string name="mainListAskUpdateDb">Refresh movies ?</string>
     <string name="mainActivityAskToExit">Do you want to go out?</string>
+    <string name="mainListMessageNoInternet">No internet</string>
+    <string name="mainListMessageNoWiFi">No WiFi</string>
 </resources>

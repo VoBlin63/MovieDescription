@@ -73,19 +73,6 @@ public class ConfigFragment extends Fragment {
         all = layout.findViewById(R.id.configConnectionModeAll);
         wifi.setChecked(config.isUseOnlyWiFi());
         all.setChecked(!config.isUseOnlyWiFi());
-
-//        connectionMode.setOnCheckedChangeListener((group, checkedId) -> {
-//            switch (checkedId) {
-//                case -1:
-//                    break;
-//                case R.id.configConnectionModeWiFi:
-//                    AppLog.write("set mode WiFi");
-//                    break;
-//                case R.id.configConnectionModeAll:
-//                    AppLog.write("set mode All");
-//                    break;
-//            }
-//        });
     }
 
     @Override

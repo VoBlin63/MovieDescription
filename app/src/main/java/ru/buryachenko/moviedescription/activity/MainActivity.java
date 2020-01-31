@@ -1,14 +1,15 @@
 package ru.buryachenko.moviedescription.activity;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,12 +31,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import ru.buryachenko.moviedescription.App;
 import ru.buryachenko.moviedescription.R;
-import ru.buryachenko.moviedescription.activity.MainListRecycler.MainListAdapter;
 import ru.buryachenko.moviedescription.utilities.AppLog;
+import ru.buryachenko.moviedescription.utilities.NetworkStatusCheck;
 import ru.buryachenko.moviedescription.viemodel.MoviesViewModel;
 
 import static ru.buryachenko.moviedescription.Constant.ALARM_KEY_MOVIE_ID;
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView search;
 
     private static Map<String, Fragment> fragments = new HashMap<>();
+    private NetworkStatusCheck networkChangeReceiver = new NetworkStatusCheck();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void acceptMovie(Bundle data) {
-        String text = data.getString(ALARM_KEY_MOVIE_TEXT,"");
+        String text = data.getString(ALARM_KEY_MOVIE_TEXT, "");
         int movieId = data.getInt(ALARM_KEY_MOVIE_ID, EMPTY_MOVIE_ID);
         viewModel.setIdForOpen(movieId);
         AppLog.write("Got movieId for open : " + movieId);
@@ -119,6 +120,20 @@ public class MainActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         return size;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(networkChangeReceiver);
     }
 
     @Override
@@ -222,4 +237,9 @@ public class MainActivity extends AppCompatActivity {
     public void setTitle(String title) {
         toolbar.setTitle(title);
     }
+
+    public NetworkStatusCheck.NetworkState getTypeConnect() {
+        return networkChangeReceiver.getTypeConnect();
+    }
+
 }
